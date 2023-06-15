@@ -31,6 +31,8 @@ jobs:
             const filePath = "${{ env.LICENSE_FILE }}"
             const content = fs.readFileSync(filePath, 'utf8');
 
+            console.log(context)
+
             github.pulls.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
