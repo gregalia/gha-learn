@@ -18,12 +18,13 @@ jobs:
       #   run: /bin/bash ./pip-licenses.sh "${{ env.LICENSE_FILE }}"
       - name: Update PR With File
         run: |
-          echo "somefile" >somefile
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add somefile
-          git commit -m "Update some file"
-          git push origin "${{ env.GITHUB_HEAD_REF }}"
+          echo "GITHUB_HEAD_REF: $GITHUB_HEAD_REF"
+        # echo "somefile" >somefile
+        # git config --global user.name "github-actions[bot]"
+        # git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        # git add somefile
+        # git commit -m "Update some file"
+        # git push
       # - name: Amend Pull Request
       #   uses: actions/github-script@v6
       # const fs = require('fs');
