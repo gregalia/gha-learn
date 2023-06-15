@@ -19,12 +19,12 @@ pip list -v |
 echo -e "\nrun as-is"
 pip-licenses >pip-licenses-as-is.txt
 
-echo -e "\nrun with python from requirements env"
-pip-licenses \
-  --python=./requirements-env/bin/python3 >pip-licenses-requirements.txt
+# echo -e "\nrun with python from requirements env"
+# pip-licenses \
+#   --python=./requirements-env/bin/python3 >pip-licenses-requirements.txt
 
 cat pip-licenses-as-is.txt
 
 echo "---"
 
-cat pip-licenses-requirements.txt
+# cat pip-licenses-requirements.txt
