@@ -10,9 +10,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Generate Output Filename
+        # Remove all chars before last slash
         run: |
           LICENSE_FILE="${GITHUB_REPOSITORY}-pip-licenses.md"
           LICENSE_FILE="${license_file##*/}"
-          export LICENSE_FILE
+          echo "LICENSE_FILE=${LICENSE_FILE}" >> "$GITHUB_ENV"
       - name: Run pip-licenses.sh
         run: bash ./pip-licenses.sh ${LICENSE_FILE}
