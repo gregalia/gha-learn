@@ -23,7 +23,9 @@ jobs:
           LICENSE_FILE="${GITHUB_REPOSITORY}-pip-licenses.md"
           echo "LICENSE_FILE=${LICENSE_FILE}" |
             tee -a "$GITHUB_ENV"
-          # # run: |
+      - name: Test License File Name
+        run: echo "${{ env.LICENSE_FILE }}"
+      # # run: |
       # LICENSE_FILE="${license_file##*/}"
       # #   echo "LICENSE_FILE=abcd" >> "$GITHUB_ENV"
       # - name: Run pip-licenses.sh
