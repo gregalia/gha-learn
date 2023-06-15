@@ -45,6 +45,7 @@ jobs:
             --order=license \
             --format=markdown \
             --with-system \
+            --summary \
             --output-file=pip-licenses.md
           cat pip-licenses.md
 
