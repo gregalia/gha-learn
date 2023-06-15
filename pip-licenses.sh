@@ -16,15 +16,16 @@ echo "see if firetail shows up"
 pip list -v |
   grep site-packages
 
-echo -e "\nrun as-is"
-pip-licenses >pip-licenses-as-is.txt
+# echo -e "\nrun as-is"
+# pip-licenses >pip-licenses-as-is.txt
 
 # echo -e "\nrun with python from requirements env"
-# pip-licenses \
-#   --python=./requirements-env/bin/python3 >pip-licenses-requirements.txt
+pip-licenses \
+  --python=./requirements-env/bin/python3 \
+  -with-system | 
+  grep pip
+# cat pip-licenses-as-is.txt
 
-cat pip-licenses-as-is.txt
-
-echo "---"
+# echo "---"
 
 # cat pip-licenses-requirements.txt
