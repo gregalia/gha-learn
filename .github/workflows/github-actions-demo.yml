@@ -34,7 +34,7 @@ jobs:
           pip install pip-licenses
       - name: Generate Licenses File
         run: |
-          pip-licenses \
+          python3 -m pip-licenses \
             --from=mixed \
             --order=license \
             --format=markdown \
