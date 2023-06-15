@@ -24,6 +24,10 @@ jobs:
           printenv
       - name: Checkout Repository
         uses: actions/checkout@v3
+      - name: Create Requirements Environment
+        run: |
+          python3 -m venv requirements-env
+          source requirements-env/bin/activate
       - name: Install requirements.txt
         run: |
           pip install -r requirements.txt
@@ -38,10 +42,16 @@ jobs:
         run: |
           pip list -v |
             grep site-packages
-      - name: Create `pip-licenses` environment
+      - name: Deactivate
+        run: deactivate
+      - name: List pips
         run: |
-          python3 -m venv pip-licenses-env
-          source pip-licenses-env/bin/activate
+          pip list -v |
+            grep site-packages
+      # - name: Create `pip-licenses` environment
+      #   run: |
+      #     python3 -m venv pip-licenses-env
+      #     source pip-licenses-env/bin/activate
       - name: Install pip-licenses
         run: |
           pip install pip-licenses
@@ -49,6 +59,9 @@ jobs:
         run: |
           pip list -v |
             grep site-packages
+      - name: Run pip-licenses
+        run: |
+          pip-licenses
       # - name: Generate Licenses File
 #         run: |
 #           license_file=pip-licenses.md &&
