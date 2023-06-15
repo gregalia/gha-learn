@@ -43,21 +43,21 @@ jobs:
           pip install pip-licenses
       - name: Generate Licenses File
         run: |
-          license_file=pip-licenses.md
-          echo -e "# ${{ github.repository }} Licenses\n"
-          pip-licenses \
+          license_file=pip-licenses.md &&
+            echo -e "# ${{ github.repository }} Licenses\n" &&
+            pip-licenses \
             --from=mixed \
             --order=license \
             --format=markdown \
-            >>$license_file
-          echo -e "\n## Summary\n"
-          pip-licenses \
+            >>$license_file &&
+            echo -e "\n## Summary\n" &&
+            pip-licenses \
             --from=mixed \
             --order=license \
             --format=markdown \
             --summary \
-            >>$license_file
-          cat $license_file
+            >>$license_file &&
+            cat $license_file
 
 
 
