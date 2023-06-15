@@ -24,9 +24,12 @@ jobs:
           printenv
       - name: Checkout Repository
         uses: actions/checkout@v3
-      - name: List files in the repository
+      - name: Install requirements.txt
         run: |
-          ls ${{ github.workspace }}
+          pip install -r requirements.txt
+      # - name: List files in the repository
+      #   run: |
+      #     ls ${{ github.workspace }}
       # - name: Set up Python
       #   uses: actions/setup-python@v4
       #   with:
@@ -40,14 +43,21 @@ jobs:
           pip install pip-licenses
       - name: Generate Licenses File
         run: |
+          license_file=pip-licenses.md
+          echo -e "# ${{ github.repository }} Licenses\n"
           pip-licenses \
             --from=mixed \
             --order=license \
             --format=markdown \
-            --with-system \
+            >>$license_file
+          echo -e "\n## Summary\n"
+          pip-licenses \
+            --from=mixed \
+            --order=license \
+            --format=markdown \
             --summary \
-            --output-file=pip-licenses.md
-          cat pip-licenses.md
+            >>$license_file
+          cat $license_file
 
 
 
