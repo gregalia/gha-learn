@@ -23,7 +23,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add somefile
           git commit -m "Update some file"
-          git push origin "${GITHUB_HEAD_REF}"
+          git push origin "${{ env.GITHUB_HEAD_REF }}"
       # - name: Amend Pull Request
       #   uses: actions/github-script@v6
       # const fs = require('fs');
