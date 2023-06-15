@@ -20,7 +20,7 @@ jobs:
         # Remove all chars before last slash
         shell: bash
         run: |
-          LICENSE_FILE="${GITHUB_REPOSITORY}-pip-licenses.md"
+          LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
           echo "LICENSE_FILE=${LICENSE_FILE}" |
             tee -a "$GITHUB_ENV"
       - name: Test License File Name
