@@ -29,12 +29,14 @@ jobs:
           # const fs = require('fs');
           # const filePath = "${{ env.LICENSE_FILE }}"
           # const content = fs.readFileSync(filePath, 'utf8');
-          # github.pulls.update({
+          # console.log(context)
+          # console.log(github)
+          # const content = 'some content'
+          # github.rest.pulls.update({
           #   owner: context.repo.owner,
           #   repo: context.repo.repo,
           #   pull_number: context.payload.pull_request.number,
           #   body: context.payload.pull_request.body + content
           # })
-          # console.log(context)
           script: |
-            console.log(github)
+            console.log(context.payload.pull_request.body)
