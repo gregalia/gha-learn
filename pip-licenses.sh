@@ -1,4 +1,4 @@
-#!/bin/bash
+!/bin/bash
 # shellcheck disable=SC1091
 
 echo "create requirements environment"
@@ -13,6 +13,8 @@ source pip-licenses-env/bin/activate
 pip install pip-licenses
 
 license_file="${GITHUB_REPOSITORY}-pip-licenses.md"
+# remove everything before the last slash
+license_file="${license_file##*/}"
 
 {
   echo -e "# ${GITHUB_REPOSITORY} Licenses\n"
