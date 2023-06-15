@@ -39,4 +39,4 @@ jobs:
           #   body: context.payload.pull_request.body + content
           # })
           script: |
-            console.log(context.payload.pull_request.body)
+            console.log(context.payload.pull_request)
