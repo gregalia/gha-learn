@@ -21,10 +21,10 @@ jobs:
         shell: bash
         run: |
           LICENSE_FILE="${GITHUB_REPOSITORY}-pip-licenses.md"
-          LICENSE_FILE="${license_file##*/}"
           echo "LICENSE_FILE=${LICENSE_FILE}" |
             tee -a "$GITHUB_ENV"
-      # # run: |
+          # # run: |
+      # LICENSE_FILE="${license_file##*/}"
       # #   echo "LICENSE_FILE=abcd" >> "$GITHUB_ENV"
       # - name: Run pip-licenses.sh
       #   run: bash ./pip-licenses.sh "${{ env.LICENSE_FILE }}"
