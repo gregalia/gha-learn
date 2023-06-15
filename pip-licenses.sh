@@ -12,9 +12,7 @@ python3 -m venv pip-licenses-env
 source pip-licenses-env/bin/activate
 pip install pip-licenses
 
-license_file="${GITHUB_REPOSITORY}-pip-licenses.md"
-# remove everything before the last slash
-license_file="${license_file##*/}"
+LICENSE_FILE="${1}"
 
 {
   echo -e "# ${GITHUB_REPOSITORY} Licenses\n"
@@ -34,6 +32,6 @@ license_file="${license_file##*/}"
     --format=markdown \
     --summary
 
-} >>"${license_file}"
+} >>"${LICENSE_FILE}"
 
-cat "${license_file}"
+cat "${LICENSE_FILE}"
