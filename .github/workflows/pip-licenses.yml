@@ -9,5 +9,10 @@ jobs:
         run: printenv
       - name: Checkout Repository
         uses: actions/checkout@v3
+      - name: Generate Output Filename
+        run: |
+          LICENSE_FILE="${GITHUB_REPOSITORY}-pip-licenses.md"
+          LICENSE_FILE="${license_file##*/}"
+          export LICENSE_FILE
       - name: Run pip-licenses.sh
-        run: bash ./pip-licenses.sh
+        run: bash ./pip-licenses.sh ${LICENSE_FILE}
