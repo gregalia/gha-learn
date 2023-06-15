@@ -12,20 +12,29 @@ python3 -m venv pip-licenses-env
 source pip-licenses-env/bin/activate
 pip install pip-licenses
 
-echo "see if firetail shows up"
-pip list -v |
-  grep site-packages
-
-# echo -e "\nrun as-is"
-# pip-licenses >pip-licenses-as-is.txt
-
-# echo -e "\nrun with python from requirements env"
 pip-licenses \
   --python=./requirements-env/bin/python3 \
-  --with-system | 
-  grep pip
-# cat pip-licenses-as-is.txt
+  --from=mixed \
+  --order=license \
+  --format=markdown \
 
-# echo "---"
+license_file=${GITHUB_REPOSITORY}-pip-licenses.md
 
-# cat pip-licenses-requirements.txt
+echo -e "# ${GITHUB_REPOSITORY}} Licenses\n"
+
+pip-licenses \
+  --from=mixed \
+  --order=license \
+  --format=markdown \
+  >>"${license_file}"
+
+echo -e "\n## Summary\n"
+
+pip-licenses \
+  --from=mixed \
+  --order=license \
+  --format=markdown \
+  --summary \
+  >>"${license_file}"
+
+cat "${license_file}"
