@@ -16,4 +16,4 @@ jobs:
           LICENSE_FILE="${license_file##*/}"
           echo "LICENSE_FILE=${LICENSE_FILE}" >> "$GITHUB_ENV"
       - name: Run pip-licenses.sh
-        run: bash ./pip-licenses.sh
+        run: bash ./pip-licenses.sh ${{ env.LICENSE_FILE }}
