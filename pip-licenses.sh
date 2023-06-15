@@ -22,7 +22,7 @@ pip list -v |
 # echo -e "\nrun with python from requirements env"
 pip-licenses \
   --python=./requirements-env/bin/python3 \
-  -with-system | 
+  --with-system | 
   grep pip
 # cat pip-licenses-as-is.txt
 
