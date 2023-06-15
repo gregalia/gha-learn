@@ -19,20 +19,29 @@ jobs:
   Output-Python-Licenses:
     runs-on: ubuntu-latest
     steps:
+      - name: Print The Environment
+        run: printenv
       - name: Checkout Repository
         uses: actions/checkout@v3
       # - name: Set up Python
       #   uses: actions/setup-python@v4
       #   with:
       #     python-version: 3.10
-      - name: Install pip-licenses
-        run: pip install pip-licenses
+      - name: Create `pip-licenses` environment
+        run: |
+          python -m venv pip-licenses-env
+          soure pip-licenses-env/bin/activate
+          pip install pip-licenses
       - name: Generate Licenses File
         run: |
           pip-licenses \
             --from=mixed \
             --order=license \
             --format=markdown \
-            --output-file=pip-licenses.md \
-            --with-system
+            --with-system \
+            --python=/usr/bin/python \
+            --output-file=pip-licenses.md
           cat pip-licenses.md
+
+
+
