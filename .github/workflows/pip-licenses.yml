@@ -9,13 +9,22 @@ jobs:
         run: printenv
       - name: Checkout Repository
         uses: actions/checkout@v3
+      # - name: try with JS
+      #   uses: actions/github-script@v6
+      #   env:
+      #     FIRST_NAME: Mona
+      #     LAST_NAME: Octocat
+      #   with:
+      #     script: |
       - name: Generate Output Filename
         # Remove all chars before last slash
+        shell: bash
         run: |
           LICENSE_FILE="${GITHUB_REPOSITORY}-pip-licenses.md"
           LICENSE_FILE="${license_file##*/}"
-          echo "LICENSE_FILE=${LICENSE_FILE}" >> "$GITHUB_ENV"
-      # run: |
-      #   echo "LICENSE_FILE=abcd" >> "$GITHUB_ENV"
-      - name: Run pip-licenses.sh
-        run: bash ./pip-licenses.sh "${{ env.LICENSE_FILE }}"
+          echo "LICENSE_FILE=${LICENSE_FILE}" |
+            tee -a "$GITHUB_ENV"
+      # # run: |
+      # #   echo "LICENSE_FILE=abcd" >> "$GITHUB_ENV"
+      # - name: Run pip-licenses.sh
+      #   run: bash ./pip-licenses.sh "${{ env.LICENSE_FILE }}"
