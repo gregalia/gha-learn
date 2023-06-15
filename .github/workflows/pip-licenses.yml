@@ -32,10 +32,11 @@ jobs:
             const content = fs.readFileSync(filePath, 'utf8');
 
             console.log(context)
+            console.log(github.pulls)
 
-            github.pulls.update({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number,
-              body: context.payload.pull_request.body + content
-            })
+            # github.pulls.update({
+            #   owner: context.repo.owner,
+            #   repo: context.repo.repo,
+            #   pull_number: context.payload.pull_request.number,
+            #   body: context.payload.pull_request.body + content
+            # })
