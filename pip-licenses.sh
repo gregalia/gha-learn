@@ -12,7 +12,7 @@ python3 -m venv pip-licenses-env
 source pip-licenses-env/bin/activate
 pip install pip-licenses
 
-LICENSE_FILE="${1}"
+# LICENSE_FILE="${1}"
 
 {
   echo -e "# ${GITHUB_REPOSITORY} Licenses\n"
