@@ -21,8 +21,8 @@ jobs:
     steps:
       - name: Print The Environment
         run: printenv
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      # - name: Checkout Repository
+      #   uses: actions/checkout@v3
       # - name: Set up Python
       #   uses: actions/setup-python@v4
       #   with:
@@ -38,11 +38,11 @@ jobs:
           pip-licenses \
             --from=mixed \
             --order=license \
-            --format=json \
+            --format=markdown \
             --with-system \
             --with-license-file \
-            --output-file=pip-licenses.json
-          cat pip-licenses.json
+            --output-file=pip-licenses.md
+          cat pip-licenses.md
 
 
 
