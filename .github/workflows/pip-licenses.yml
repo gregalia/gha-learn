@@ -1,0 +1,13 @@
+name: Get pip Licenses
+run-name: ${{ github.actor }} is getting pip licenses
+on: [push]
+jobs:
+  Output-Python-Licenses:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print The Environment
+        run: printenv
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Run pip-licenses.sh
+        run: bash ./pip-licenses.sh
