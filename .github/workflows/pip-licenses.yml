@@ -7,15 +7,15 @@ jobs:
     steps:
       - name: Print The Environment
         run: printenv
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-      - name: Generate Output Filename
-        shell: bash
-        run: |
-          LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
-          echo "LICENSE_FILE=${LICENSE_FILE}" >>"$GITHUB_ENV"
-      - name: Run pip-licenses.sh
-        run: /bin/bash ./pip-licenses.sh "${{ env.LICENSE_FILE }}"
+      # - name: Checkout Repository
+      #   uses: actions/checkout@v3
+      # - name: Generate Output Filename
+      #   shell: bash
+      #   run: |
+      #     LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
+      #     echo "LICENSE_FILE=${LICENSE_FILE}" >>"$GITHUB_ENV"
+      # - name: Run pip-licenses.sh
+      #   run: /bin/bash ./pip-licenses.sh "${{ env.LICENSE_FILE }}"
       # - name: Update
       #   run: |
       #     git config --global user.name "github-actions[bot]"
