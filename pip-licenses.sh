@@ -12,29 +12,26 @@ python3 -m venv pip-licenses-env
 source pip-licenses-env/bin/activate
 pip install pip-licenses
 
-pip-licenses \
-  --python=./requirements-env/bin/python3 \
-  --from=mixed \
-  --order=license \
-  --format=markdown \
+license_file="${GITHUB_REPOSITORY}-pip-licenses.md"
 
-license_file=${GITHUB_REPOSITORY}-pip-licenses.md
+{
+  echo -e "# ${GITHUB_REPOSITORY} Licenses\n"
 
-echo -e "# ${GITHUB_REPOSITORY}} Licenses\n"
+  pip-licenses \
+    --python=./requirements-env/bin/python3 \
+    --from=mixed \
+    --order=license \
+    --format=markdown
 
-pip-licenses \
-  --from=mixed \
-  --order=license \
-  --format=markdown \
-  >>"${license_file}"
+  echo -e "\n## Summary\n"
 
-echo -e "\n## Summary\n"
+  pip-licenses \
+    --python=./requirements-env/bin/python3 \
+    --from=mixed \
+    --order=license \
+    --format=markdown \
+    --summary
 
-pip-licenses \
-  --from=mixed \
-  --order=license \
-  --format=markdown \
-  --summary \
-  >>"${license_file}"
+} >>"${license_file}"
 
 cat "${license_file}"
