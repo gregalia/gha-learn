@@ -11,9 +11,11 @@ jobs:
         uses: actions/checkout@v3
       - name: Generate Output Filename
         # Remove all chars before last slash
+        # run: |
+        #   LICENSE_FILE="${GITHUB_REPOSITORY}-pip-licenses.md"
+        #   LICENSE_FILE="${license_file##*/}"
+        #   echo "LICENSE_FILE=${LICENSE_FILE}" >> "$GITHUB_ENV"
         run: |
-          LICENSE_FILE="${GITHUB_REPOSITORY}-pip-licenses.md"
-          LICENSE_FILE="${license_file##*/}"
-          echo "LICENSE_FILE=${LICENSE_FILE}" >> "$GITHUB_ENV"
+          echo "LICENSE_FILE=abcd" >> "$GITHUB_ENV"
       - name: Run pip-licenses.sh
-        run: bash ./pip-licenses.sh ${{ env.LICENSE_FILE }}
+        run: bash ./pip-licenses.sh "${{ env.LICENSE_FILE }}"
