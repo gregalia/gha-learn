@@ -20,6 +20,8 @@ jobs:
           git checkout --progress ${GITHUB_HEAD_REF}
       - name: Check Dependencies Diff
         run: |
+          echo ${PYTHON_DEPENDENCIES}
+          git diff --name-only --diff-filter=AM -- ${PYTHON_DEPENDENCIES}
           git diff --quiet -- ${PYTHON_DEPENDENCIES} || 
             echo "BUILD_DEPENDENCIES_MODIFIED=1" >>${GITHUB_ENV}
       - name: Generate License File Name
