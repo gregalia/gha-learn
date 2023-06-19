@@ -48,7 +48,7 @@ jobs:
           commit_message: Test 3P action
           branch: ${{ env.BRANCH_CREATED_HERE }}
           create_branch: true
-          file_pattern: ${{ env.BRANCH_CREATED_HERE }}
+          file_pattern: ${{ env.LICENSE_FILE }}
 #       - name: Update Pull Request With File
 #         run: |
 #           git config --global user.email no-reply@github.com
