@@ -16,8 +16,13 @@ jobs:
           LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
           echo "LICENSE_FILE=${LICENSE_FILE}" >>"${GITHUB_ENV}"
 
-      - name: Run License File Script
-        run: ./pip-licenses.sh "${LICENSE_FILE}"
+      # - name: Run License File Script
+      #   run: ./pip-licenses.sh "${LICENSE_FILE}"
+      #   env:
+      #     LICENSE_FILE: ${{ env.LICENSE_FILE }}
+
+      - name: Dummy License File
+        run: echo "Dummy content" >"${LICENSE_FILE}"
         env:
           LICENSE_FILE: ${{ env.LICENSE_FILE }}
 
@@ -27,7 +32,7 @@ jobs:
           git config --global user.name "GitHub Actions"
 
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          git checkout "${GITHUB_HEAD_REF}"
+          git checkout -b license-file
 
           git add "${LICENSE_FILE}"
           git commit -m "Update license file"
