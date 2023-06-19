@@ -1,7 +1,7 @@
 name: Get Languages
 run-name: Get Languages
 on: pull_request
-permissions: read-all
+# permissions: read-all
 jobs:
   get-languages:
     runs-on: ubuntu-latest
@@ -9,7 +9,7 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            github.rest.repos.listLanguages({
+            console.log(github.rest.repos.listLanguages({
               owner: context.repo.owner,
               repo: context.repo.repo,
-            });
+            }));
