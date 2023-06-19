@@ -22,9 +22,13 @@ jobs:
         run: |
           echo ${PYTHON_DEPENDENCIES}
           git diff --name-only --diff-filter=AM -- ${PYTHON_DEPENDENCIES}
-          git diff --quiet -- ${PYTHON_DEPENDENCIES} || echo "BUILD_DEPENDENCIES_MODIFIED=1" >>${GITHUB_ENV}
+          git diff --quiet -- ${PYTHON_DEPENDENCIES} || echo "BUILD_DEPENDENCIES_MODIFIED=true" >>${GITHUB_ENV}
+      - name: print value
+        uses: actions/github-script@v6
+        with:
+          script: console.log(env.BUILD_DEPENDENCIES_MODIFIED)
       - name: Generate License File Name
-        if: env.BUILD_DEPENDENCIES_MODIFIED == 1
+        if: env.BUILD_DEPENDENCIES_MODIFIED
         run: |
           LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
           echo "LICENSE_FILE=${LICENSE_FILE}" >>${GITHUB_ENV}
