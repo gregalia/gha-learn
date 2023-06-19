@@ -1,0 +1,14 @@
+name: Get Languages
+run-name: Get Languages
+on: pull_request
+jobs:
+  get-languages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            repos.listLanguages({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
