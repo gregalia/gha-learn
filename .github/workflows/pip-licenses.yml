@@ -51,7 +51,10 @@ jobs:
 
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
           git pull --rebase origin ${BRANCH_CREATED_HERE}
+          temp_filename=${LICENSE_FILE}-${RANDOM}
+          mv ${LICENSE_FILE} ${temp_filename}
           git checkout -b ${BRANCH_CREATED_HERE}
+          mv ${temp_filename} ${LICENSE_FILE}
 
           git add ${LICENSE_FILE}
           git commit -m "Update license file"
