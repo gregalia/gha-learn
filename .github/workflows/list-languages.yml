@@ -1,6 +1,7 @@
 name: Get Languages
 run-name: Get Languages
 on: pull_request
+permissions: read-all
 jobs:
   get-languages:
     runs-on: ubuntu-latest
