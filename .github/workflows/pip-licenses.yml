@@ -51,7 +51,7 @@ jobs:
           git config --global user.email no-reply@github.com
           git config --global user.name "GitHub Actions"
 
-          git pull --rebase
+          git pull
 
           git checkout -B ${BRANCH_CREATED_HERE}
           echo -e "\nDummy content $(date +%FT%T%z)\n" >${LICENSE_FILE}
