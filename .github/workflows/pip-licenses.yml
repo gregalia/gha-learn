@@ -59,7 +59,7 @@ jobs:
 
           git add ${LICENSE_FILE}
           git commit -m "Update license file"
-          git push origin ${BRANCH_CREATED_HERE}
+          git push -f origin ${BRANCH_CREATED_HERE}
 
 #           git pull --rebase origin ${BRANCH_CREATED_HERE}
 #           temp_filename=${LICENSE_FILE}-${RANDOM}
