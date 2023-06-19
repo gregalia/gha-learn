@@ -22,8 +22,7 @@ jobs:
         run: |
           echo ${PYTHON_DEPENDENCIES}
           git diff --name-only --diff-filter=AM -- ${PYTHON_DEPENDENCIES}
-          git diff --quiet -- ${PYTHON_DEPENDENCIES} || 
-            echo "BUILD_DEPENDENCIES_MODIFIED=1" >>${GITHUB_ENV}
+          git diff --quiet -- ${PYTHON_DEPENDENCIES} || echo "BUILD_DEPENDENCIES_MODIFIED=1" >>${GITHUB_ENV}
       - name: Generate License File Name
         if: ${{ env.BUILD_DEPENDENCIES_MODIFIED == 1}}
         run: |
