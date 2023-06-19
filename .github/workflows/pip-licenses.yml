@@ -1,6 +1,18 @@
 name: Get pip Licenses
 run-name: ${{ github.actor }} is getting pip licenses
-env:
+permissions:
+  actions: none
+  checks: none
+  contents: write
+  deployments: none
+  issues: none
+  packages: write
+  pull-requests: none
+  repository-projects: none
+  security-events: none
+  statuses: none
+
+  env:
   BRANCH_CREATED_HERE: license-file
 on:
   pull_request:
