@@ -1,3 +1,2 @@
 firetail
-pdf417
 reportlab
