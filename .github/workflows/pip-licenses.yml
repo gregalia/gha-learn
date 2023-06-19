@@ -42,18 +42,6 @@ jobs:
           LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
           echo "LICENSE_FILE=${LICENSE_FILE}" >>${GITHUB_ENV}
 
-      #       - name: Dummy License File
-      #         run: |
-      #           echo -e "\nDummy content $(date +%FT%T%z)\n" >${LICENSE_FILE}
-      #
-      #       - name: Create Pull Request
-      #         uses: peter-evans/create-pull-request@v5
-      #         with:
-      #           token: ${{ secrets.GITHUB_TOKEN }}
-      #           add-paths: ${{ env.LICENSE_FILE }}
-      #           labels: |
-      #             automated pr
-
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
@@ -65,7 +53,7 @@ jobs:
           git checkout --progress ${GITHUB_HEAD_REF}
 
       - name: Run License File Script
-        run: ./pip-licenses.sh "${LICENSE_FILE}"
+        run: .github/pip-licenses.sh "${LICENSE_FILE}"
 
       - name: Push License File to Pull Request Branch
         run: |
