@@ -1,21 +1,32 @@
 name: Get pip Licenses
 run-name: ${{ github.actor }} is getting pip licenses
 
-env:
-  BRANCH_CREATED_HERE: license-file
+# env:
+#   BRANCH_CREATED_HERE: license-file
 
-on:
-  pull_request:
-    branches-ignore:
-      - 'license-file'
+on: pull_request
+# :
+#     branches-ignore:
+#       - 'license-file'
 
 jobs:
   Output-Python-Licenses:
     if: github.event.label.name != 'automated pr'
     # Permission needed for committing license file
     permissions:
+      # contents: write
+      # pull-requests: write
+      actions: write
+      checks: write
       contents: write
+      deployments: write
+      issues: write
+      packages: write
       pull-requests: write
+      repository-projects: write
+      security-events: write
+      statuses: write
+
     runs-on: ubuntu-latest
     steps:
       - name: Print The Environment
