@@ -9,7 +9,7 @@ permissions:
   packages: write
   pull-requests: none
   repository-projects: write
-  security-events: none
+  security-events: write
   statuses: none
 
 env:
