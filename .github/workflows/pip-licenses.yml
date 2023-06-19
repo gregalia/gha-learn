@@ -14,23 +14,28 @@ jobs:
     if: github.event.label.name != 'automated pr'
     # Permission needed for committing license file
     permissions:
-      # contents: write
-      # pull-requests: write
-      actions: write
-      checks: write
       contents: write
-      deployments: write
-      issues: write
-      packages: write
       pull-requests: write
-      repository-projects: write
-      security-events: write
-      statuses: write
+      # actions: write
+      # checks: write
+      # contents: write
+      # deployments: write
+      # issues: write
+      # packages: write
+      # pull-requests: write
+      # repository-projects: write
+      # security-events: write
+      # statuses: write
 
     runs-on: ubuntu-latest
     steps:
       - name: Print The Environment
         run: printenv
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo '$GITHUB_CONTEXT'
 
       - name: Checkout Repository
         uses: actions/checkout@v3
