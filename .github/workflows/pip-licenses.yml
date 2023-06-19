@@ -21,8 +21,8 @@ jobs:
       - name: Check Dependencies Diff
         run: |
           BUILD_DEPENDENCIES_MODIFIED=false
-          git diff --name-only --diff-filter=AM -- ${PYTHON_DEPENDENCIES}
-          git diff --quiet -- ${PYTHON_DEPENDENCIES} || BUILD_DEPENDENCIES_MODIFIED=true
+          git diff --cached --name-only --diff-filter=AM -- ${PYTHON_DEPENDENCIES}
+          git diff --cached --quiet -- ${PYTHON_DEPENDENCIES} || BUILD_DEPENDENCIES_MODIFIED=true
           echo "BUILD_DEPENDENCIES_MODIFIED=$BUILD_DEPENDENCIES_MODIFIED" >>${GITHUB_ENV}
       - run: echo ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
       # - name: Generate License File Name
