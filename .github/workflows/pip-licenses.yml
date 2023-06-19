@@ -20,23 +20,24 @@ jobs:
           git checkout --progress ${GITHUB_HEAD_REF}
       - name: Check Dependencies Diff
         run: |
-          echo ${PYTHON_DEPENDENCIES}
+          BUILD_DEPENDENCIES_MODIFIED=false
           git diff --name-only --diff-filter=AM -- ${PYTHON_DEPENDENCIES}
-          git diff --quiet -- ${PYTHON_DEPENDENCIES} || echo "BUILD_DEPENDENCIES_MODIFIED=true" >>${GITHUB_ENV}
+          git diff --quiet -- ${PYTHON_DEPENDENCIES} || BUILD_DEPENDENCIES_MODIFIED=true
+          echo "BUILD_DEPENDENCIES_MODIFIED=$BUILD_DEPENDENCIES_MODIFIED" >>${GITHUB_ENV}
       - run: echo ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
-      - name: Generate License File Name
-        if: env.BUILD_DEPENDENCIES_MODIFIED
-        run: |
-          LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
-          echo "LICENSE_FILE=${LICENSE_FILE}" >>${GITHUB_ENV}
-      - name: Run License File Script
-        if: env.BUILD_DEPENDENCIES_MODIFIED
-        run: .github/pip-licenses.sh "${LICENSE_FILE}"
-      - name: Push License File to Pull Request Branch
-        if: ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
-        run: |
-          git config --global user.email github-actions[bot]@users.noreply.github.com
-          git config --global user.name "GitHub Actions"
-          git add --verbose ${LICENSE_FILE}
-          git commit --verbose --message="Update license file"
-          git push --verbose --force origin ${GITHUB_HEAD_REF}
+      # - name: Generate License File Name
+      #   if: env.BUILD_DEPENDENCIES_MODIFIED
+      #   run: |
+      #     LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
+      #     echo "LICENSE_FILE=${LICENSE_FILE}" >>${GITHUB_ENV}
+      # - name: Run License File Script
+      #   if: env.BUILD_DEPENDENCIES_MODIFIED
+      #   run: .github/pip-licenses.sh "${LICENSE_FILE}"
+      # - name: Push License File to Pull Request Branch
+      #   if: ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
+      #   run: |
+      #     git config --global user.email github-actions[bot]@users.noreply.github.com
+      #     git config --global user.name "GitHub Actions"
+      #     git add --verbose ${LICENSE_FILE}
+      #     git commit --verbose --message="Update license file"
+      #     git push --verbose --force origin ${GITHUB_HEAD_REF}
