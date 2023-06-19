@@ -33,37 +33,35 @@ jobs:
       #   env:
       #     LICENSE_FILE: ${{ env.LICENSE_FILE }}
 
-      - name: Pull Repository
+      # - name: Pull Repository
+      #   run: |
+      #     git pull --rebase
+
+      # - name: Commit License File
+      #   uses: stefanzweifel/git-auto-commit-action@v4
+      #   with:
+      #     commit_message: Test with existing branch
+      #     branch: ${{ env.BRANCH_CREATED_HERE }}
+      #     create_branch: true
+      #     file_pattern: ${{ env.LICENSE_FILE }}
+      - name: Update Pull Request With File
         run: |
+          git config --global user.email no-reply@github.com
+          git config --global user.name "GitHub Actions"
+
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}/
           git pull --rebase
 
-      - name: Dummy License File
-        run: echo "Dummy content $(date +%FT%T%z)" >${LICENSE_FILE}
-        env:
-          LICENSE_FILE: ${{ env.LICENSE_FILE }}
+          git checkout -B ${BRANCH_CREATED_HERE}
+          echo "Dummy content $(date +%FT%T%z)" >${LICENSE_FILE}
+          cat ${LICENSE_FILE}
 
-      - name: Commit License File
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Test with existing branch
-          branch: ${{ env.BRANCH_CREATED_HERE }}
-          create_branch: true
-          file_pattern: ${{ env.LICENSE_FILE }}
-#       - name: Update Pull Request With File
-#         run: |
-#           git config --global user.email no-reply@github.com
-#           git config --global user.name "GitHub Actions"
-#
-#           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}/
+          git add ${LICENSE_FILE}
+          git commit -m "Update license file"
+          git push origin ${BRANCH_CREATED_HERE}
+
 #           git pull --rebase origin ${BRANCH_CREATED_HERE}
 #           temp_filename=${LICENSE_FILE}-${RANDOM}
 #           mv ${LICENSE_FILE} ${temp_filename}
-#           git checkout -b ${BRANCH_CREATED_HERE}
 #           mv ${temp_filename} ${LICENSE_FILE}
 #
-#           git add ${LICENSE_FILE}
-#           git commit -m "Update license file"
-#           git push origin ${BRANCH_CREATED_HERE}
-#
-#         env:
-#           LICENSE_FILE: ${{ env.LICENSE_FILE }}
