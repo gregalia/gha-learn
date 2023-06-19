@@ -49,8 +49,8 @@ jobs:
           git config --global user.email no-reply@github.com
           git config --global user.name "GitHub Actions"
 
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          git pull --rebase
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
+          git pull --rebase origin ${BRANCH_CREATED_HERE}
           git checkout -b ${BRANCH_CREATED_HERE}
 
           git add ${LICENSE_FILE}
