@@ -3,6 +3,7 @@ run-name: ${{ github.actor }} is getting pip licenses
 
 env:
   BRANCH_CREATED_HERE: license-file
+
 on:
   pull_request:
     branches-ignore:
@@ -44,16 +45,16 @@ jobs:
       #     branch: ${{ env.BRANCH_CREATED_HERE }}
       #     create_branch: true
       #     file_pattern: ${{ env.LICENSE_FILE }}
+      # git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}/
       - name: Update Pull Request With File
         run: |
           git config --global user.email no-reply@github.com
           git config --global user.name "GitHub Actions"
 
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}/
           git pull --rebase
 
           git checkout -B ${BRANCH_CREATED_HERE}
-          echo "Dummy content $(date +%FT%T%z)" >${LICENSE_FILE}
+          echo -e "\nDummy content $(date +%FT%T%z)\n" >${LICENSE_FILE}
           cat ${LICENSE_FILE}
 
           git add ${LICENSE_FILE}
