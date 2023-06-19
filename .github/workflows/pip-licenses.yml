@@ -24,12 +24,12 @@ jobs:
           git diff --name-only --diff-filter=AM -- ${PYTHON_DEPENDENCIES}
           git diff --quiet -- ${PYTHON_DEPENDENCIES} || echo "BUILD_DEPENDENCIES_MODIFIED=1" >>${GITHUB_ENV}
       - name: Generate License File Name
-        if: ${{ env.BUILD_DEPENDENCIES_MODIFIED == 1}}
+        if: env.BUILD_DEPENDENCIES_MODIFIED == 1
         run: |
           LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
           echo "LICENSE_FILE=${LICENSE_FILE}" >>${GITHUB_ENV}
       - name: Run License File Script
-        if: ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
+        if: env.BUILD_DEPENDENCIES_MODIFIED
         run: .github/pip-licenses.sh "${LICENSE_FILE}"
       - name: Push License File to Pull Request Branch
         if: ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
