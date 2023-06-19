@@ -1,8 +1,8 @@
 name: Get pip Licenses
 run-name: ${{ github.actor }} is getting pip licenses
 permissions:
-  actions: none
-  checks: none
+  actions: write
+  checks: write
   contents: write
   deployments: none
   issues: none
