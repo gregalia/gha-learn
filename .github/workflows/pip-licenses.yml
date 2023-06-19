@@ -29,13 +29,13 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: Print The Environment
-        run: printenv
-
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo '$GITHUB_CONTEXT'
+      #       - name: Print The Environment
+      #         run: printenv
+      #
+      #       - name: Dump GitHub context
+      #         env:
+      #           GITHUB_CONTEXT: ${{ toJson(github) }}
+      #         run: echo '$GITHUB_CONTEXT'
 
       - name: Generate License File Name
         run: |
@@ -69,7 +69,7 @@ jobs:
 
       - name: Push License File to Pull Request Branch
         run: |
-          git config --global user.email no-reply@github.com
+          git config --global user.email github-actions[bot]@users.noreply.github.com
           git config --global user.name "GitHub Actions"
           git add --verbose ${LICENSE_FILE}
           git commit --verbose --message="Update license file"
