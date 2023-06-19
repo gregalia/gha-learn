@@ -33,14 +33,14 @@ jobs:
       #   env:
       #     LICENSE_FILE: ${{ env.LICENSE_FILE }}
 
-      - name: Dummy License File
-        run: echo "Dummy content" >${LICENSE_FILE}
-        env:
-          LICENSE_FILE: ${{ env.LICENSE_FILE }}
-
       - name: Pull Repository
         run: |
           git pull --rebase
+
+      - name: Dummy License File
+        run: echo "Dummy content $(date +%FT%T%z)" >${LICENSE_FILE}
+        env:
+          LICENSE_FILE: ${{ env.LICENSE_FILE }}
 
       - name: Commit License File
         uses: stefanzweifel/git-auto-commit-action@v4
