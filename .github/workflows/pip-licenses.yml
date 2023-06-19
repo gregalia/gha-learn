@@ -15,7 +15,7 @@ jobs:
     # Permission needed for committing license file
     permissions:
       contents: write
-      pull-requests: write
+      # pull-requests: write
       # actions: write
       # checks: write
       # contents: write
@@ -37,11 +37,6 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo '$GITHUB_CONTEXT'
 
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.head_ref }}
-
       - name: Generate License File Name
         run: |
           LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
@@ -59,22 +54,23 @@ jobs:
       #           labels: |
       #             automated pr
 
-      # - name: Run License File Script
-      #   run: ./pip-licenses.sh "${LICENSE_FILE}"
-      #   env:
-      #     LICENSE_FILE: ${{ env.LICENSE_FILE }}
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
 
-      - name: Update Pull Request With File
+      - name: Pull and Checkout This branch
+        run: |
+          git pull --verbose
+          git checkout --progress ${GITHUB_HEAD_REF}
+
+      - name: Run License File Script
+        run: ./pip-licenses.sh "${LICENSE_FILE}"
+
+      - name: Push License File to Pull Request Branch
         run: |
           git config --global user.email no-reply@github.com
           git config --global user.name "GitHub Actions"
-
-          git pull --verbose
-
-          git checkout --progress ${GITHUB_HEAD_REF}
-          echo -e "\nDummy content $(date +%FT%T%z)\n" >${LICENSE_FILE}
-          cat ${LICENSE_FILE}
-
           git add --verbose ${LICENSE_FILE}
           git commit --verbose --message="Update license file"
           git push --verbose --force origin ${GITHUB_HEAD_REF}
