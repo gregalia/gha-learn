@@ -32,6 +32,6 @@ LICENSE_FILE="${1}"
     --format=markdown \
     --summary
 
-} >>"${LICENSE_FILE}"
+} >"${LICENSE_FILE}"
 
 cat "${LICENSE_FILE}"
