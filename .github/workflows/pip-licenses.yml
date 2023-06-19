@@ -23,8 +23,8 @@ jobs:
           BUILD_DEPENDENCIES_MODIFIED=false
           git diff --quiet --diff-filter=AM HEAD^ HEAD -- ${PYTHON_DEPENDENCIES} || BUILD_DEPENDENCIES_MODIFIED=true
           echo "BUILD_DEPENDENCIES_MODIFIED=$BUILD_DEPENDENCIES_MODIFIED" >>${GITHUB_ENV}
-        - run: echo ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
-        
+      - run: echo ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
+
       # - name: Generate License File Name
       #   if: env.BUILD_DEPENDENCIES_MODIFIED
       #   run: |
