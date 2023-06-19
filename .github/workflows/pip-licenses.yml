@@ -38,6 +38,10 @@ jobs:
         env:
           LICENSE_FILE: ${{ env.LICENSE_FILE }}
 
+      - name: Pull Repository
+        run: |
+          git pull --rebase origin ${BRANCH_CREATED_HERE}
+
       - name: Commit License File
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
