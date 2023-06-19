@@ -56,7 +56,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           add-paths: ${{ env.LICENSE_FILE }}
-          branch: ${{ github.head_ref }}
           labels: |
             automated pr
 
