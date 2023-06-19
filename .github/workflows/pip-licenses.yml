@@ -15,6 +15,7 @@ jobs:
     # Permission needed for committing license file
     permissions:
       contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Print The Environment
