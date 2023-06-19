@@ -50,16 +50,17 @@ jobs:
         run: |
           git config --global user.email no-reply@github.com
           git config --global user.name "GitHub Actions"
+          git config --list | xargs -t
 
-          git pull --verbose
+          git pull --verbose | xargs -t
 
-          git checkout --progress -b ${BRANCH_CREATED_HERE}
-          echo -e "\nDummy content $(date +%FT%T%z)\n" >${LICENSE_FILE}
-          cat ${LICENSE_FILE}
+          git checkout --progress -b ${BRANCH_CREATED_HERE} | xargs -t
+          echo -e "\nDummy content $(date +%FT%T%z)\n" >${LICENSE_FILE} | xargs -t
+          cat ${LICENSE_FILE} | xargs -t
 
-          git add ${LICENSE_FILE}
-          git commit -m "Update license file"
-          git push -f origin ${BRANCH_CREATED_HERE}
+          git add --verbose ${LICENSE_FILE} | xargs -t
+          git commit --verbose --message="Update license file" | xargs -t
+          git push --verbose --force origin ${BRANCH_CREATED_HERE} | xargs -t
 
 #           git pull --rebase origin ${BRANCH_CREATED_HERE}
 #           temp_filename=${LICENSE_FILE}-${RANDOM}
