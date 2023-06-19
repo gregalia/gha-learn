@@ -1,60 +1,27 @@
 name: Get pip Licenses
 run-name: ${{ github.actor }} is getting pip licenses
-
-# env:
-#   BRANCH_CREATED_HERE: license-file
-
 on: pull_request
-# :
-#     branches-ignore:
-#       - 'license-file'
-
 jobs:
   Output-Python-Licenses:
-    if: github.event.label.name != 'automated pr'
     # Permission needed for committing license file
     permissions:
       contents: write
-      # pull-requests: write
-      # actions: write
-      # checks: write
-      # contents: write
-      # deployments: write
-      # issues: write
-      # packages: write
-      # pull-requests: write
-      # repository-projects: write
-      # security-events: write
-      # statuses: write
-
     runs-on: ubuntu-latest
     steps:
-      #       - name: Print The Environment
-      #         run: printenv
-      #
-      #       - name: Dump GitHub context
-      #         env:
-      #           GITHUB_CONTEXT: ${{ toJson(github) }}
-      #         run: echo '$GITHUB_CONTEXT'
-
       - name: Generate License File Name
         run: |
           LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
           echo "LICENSE_FILE=${LICENSE_FILE}" >>${GITHUB_ENV}
-
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
-
       - name: Pull and Checkout This branch
         run: |
           git pull --verbose
           git checkout --progress ${GITHUB_HEAD_REF}
-
       - name: Run License File Script
         run: .github/pip-licenses.sh "${LICENSE_FILE}"
-
       - name: Push License File to Pull Request Branch
         run: |
           git config --global user.email github-actions[bot]@users.noreply.github.com
