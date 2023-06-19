@@ -1,6 +1,8 @@
 name: Get pip Licenses
 run-name: ${{ github.actor }} is getting pip licenses
 on: pull_request
+env:
+  PYTHON_DEPENDENCIES: requirements.txt
 jobs:
   Output-Python-Licenses:
     # Permission needed for committing license file
@@ -8,10 +10,6 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Generate License File Name
-        run: |
-          LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
-          echo "LICENSE_FILE=${LICENSE_FILE}" >>${GITHUB_ENV}
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
@@ -20,9 +18,20 @@ jobs:
         run: |
           git pull --verbose
           git checkout --progress ${GITHUB_HEAD_REF}
+      - name: Check Dependencies Diff
+        run: |
+          git diff --quiet -- ${PYTHON_DEPENDENCIES} || 
+            echo "BUILD_DEPENDENCIES_MODIFIED=1" >>${GITHUB_ENV}
+      - name: Generate License File Name
+        if: ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
+        run: |
+          LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
+          echo "LICENSE_FILE=${LICENSE_FILE}" >>${GITHUB_ENV}
       - name: Run License File Script
+        if: ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
         run: .github/pip-licenses.sh "${LICENSE_FILE}"
       - name: Push License File to Pull Request Branch
+        if: ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
         run: |
           git config --global user.email github-actions[bot]@users.noreply.github.com
           git config --global user.name "GitHub Actions"
