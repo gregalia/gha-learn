@@ -7,22 +7,31 @@ jobs:
     steps:
       - name: Print The Environment
         run: printenv
+
       - name: Checkout Repository
         uses: actions/checkout@v3
-      - name: Generate Output Filename
-        shell: bash
+
+      - name: Generate License File Name
         run: |
           LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
-          echo "LICENSE_FILE=${LICENSE_FILE}" >>"$GITHUB_ENV"
-      - name: Generate License File
-        run: /bin/bash ./pip-licenses.sh "${{ env.LICENSE_FILE }}"
+          echo "LICENSE_FILE=${LICENSE_FILE}" >>"${GITHUB_ENV}"
+
+      - name: Run License File Script
+        run: ./pip-licenses.sh "${LICENSE_FILE}"
+        env:
+          LICENSE_FILE: ${{ env.LICENSE_FILE }}
+
       - name: Update Pull Request With File
         run: |
           git config --global user.email "no-reply@github.com"
           git config --global user.name "GitHub Actions"
-          git add "${{ env.LICENSE_FILE }}"
+
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          git checkout "${GITHUB_HEAD_REF}"
+
+          git add "${LICENSE_FILE}"
           git commit -m "Update license file"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git push
+
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LICENSE_FILE: ${{ env.LICENSE_FILE }}
