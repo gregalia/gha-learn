@@ -51,9 +51,9 @@ jobs:
           git config --global user.email no-reply@github.com
           git config --global user.name "GitHub Actions"
 
-          git pull
+          git pull --verbose
 
-          git checkout -B ${BRANCH_CREATED_HERE}
+          git checkout --progress -b ${BRANCH_CREATED_HERE}
           echo -e "\nDummy content $(date +%FT%T%z)\n" >${LICENSE_FILE}
           cat ${LICENSE_FILE}
 
