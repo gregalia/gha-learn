@@ -1,6 +1,12 @@
 name: Get pip Licenses
 run-name: ${{ github.actor }} is getting pip licenses
-on: [pull_request]
+env:
+  BRANCH_CREATED_HERE: license-file
+on:
+  pull_request:
+    branches-ignore:
+      - '${{ env.BRANCH_CREATED_HERE }}'
+
 jobs:
   Output-Python-Licenses:
     runs-on: ubuntu-latest
@@ -14,7 +20,7 @@ jobs:
       - name: Generate License File Name
         run: |
           LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
-          echo "LICENSE_FILE=${LICENSE_FILE}" >>"${GITHUB_ENV}"
+          echo "LICENSE_FILE=${LICENSE_FILE}" >>${GITHUB_ENV}
 
       # - name: Run License File Script
       #   run: ./pip-licenses.sh "${LICENSE_FILE}"
@@ -22,21 +28,21 @@ jobs:
       #     LICENSE_FILE: ${{ env.LICENSE_FILE }}
 
       - name: Dummy License File
-        run: echo "Dummy content" >"${LICENSE_FILE}"
+        run: echo "Dummy content" >${LICENSE_FILE}
         env:
           LICENSE_FILE: ${{ env.LICENSE_FILE }}
 
       - name: Update Pull Request With File
         run: |
-          git config --global user.email "no-reply@github.com"
+          git config --global user.email no-reply@github.com
           git config --global user.name "GitHub Actions"
 
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          git checkout -b license-file
+          git checkout -b ${BRANCH_CREATED_HERE}
 
-          git add "${LICENSE_FILE}"
+          git add ${LICENSE_FILE}
           git commit -m "Update license file"
-          git push
+          git push origin ${BRANCH_CREATED_HERE}
 
         env:
           LICENSE_FILE: ${{ env.LICENSE_FILE }}
