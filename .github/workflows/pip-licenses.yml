@@ -15,44 +15,71 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: Get PR Files
+        uses: actions/github-script@v6
         with:
-          fetch-depth: 0
-          ref: ${{ github.head_ref }}
+          retries: 3
+          script: |
+            const query = `query($owner:String!, $name:String!, $label:String!) {
+              repository(owner:$owner, name:$name){
+                pullRequest(number:$pull_number) {
+                  files(first: 100) {
+                    nodes {
+                      changeType
+                      path
+                    }
+                  }
+                }
+              }
+            }`;
+            const variables = {
+              owner: context.repo.owner,
+              name: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            }
+            const result = await github.graphql(query, variables)
+            console.log(result)
 
-      - name: Fetch Base Ref
-        run: |
-          git fetch --depth=1 $(git remote show -n | head -n 1) $GITHUB_BASE_REF
-          git branch
-          git diff $GITHUB_HEAD_REF..$GITHUB_BASE_REF \
-            --name-only --exit-code -- $PYTHON_DEPENDENCIES
-          echo $?
+        # with:
+      #   retries: 3
+      #   script: |
+      #     let options = {
+      #       owner: context.repo.owner,
+      #       repo: context.repo.repo,
+      #       pull_number: context.payload.pull_request.number
+      #     }
+      #     console.log(options)
+      #     let { data } = await github.rest.pulls.listFiles(options);
+      #     console.log()
 
-      # - name: Dump ENV
-      #   run: printenv
-      # - name: Dump GitHub context
-      #   env:
-      #     GITHUB_CONTEXT: ${{ toJson(github) }}
-      #   run: echo '$GITHUB_CONTEXT'
-      # - name: Get PR Files
-      #   uses: actions/github-script@v6
-      #   with:
-      #     retries: 3
-      #     script: |
-      #       let options = {
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         pull_number: context.payload.pull_request.number
-      #       }
-      #       console.log(options)
-      #       let { data } = await github.rest.pulls.listFiles(options);
-      #       console.log()
-      # - name: GitHub CLI
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     PR_NUMBER: ${{ github.event.number }}
-      #   run: gh pr diff ${GITHUB_HEAD_REF} --name-only
+#       - name: Checkout Repository
+#         uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 0
+#           ref: ${{ github.head_ref }}
+#
+#       - name: Fetch Base Ref
+#         run: |
+#           remote=$(git remote show -n | head -n 1)
+#           echo $remote
+#           git fetch --depth=1 $(git remote show -n | head -n 1) $GITHUB_BASE_REF
+#           git branch
+#           git diff $GITHUB_HEAD_REF..$GITHUB_BASE_REF \
+#             --name-only --exit-code -- $PYTHON_DEPENDENCIES
+#           echo $?
+
+# - name: Dump ENV
+#   run: printenv
+# - name: Dump GitHub context
+#   env:
+#     GITHUB_CONTEXT: ${{ toJson(github) }}
+#   run: echo '$GITHUB_CONTEXT'
+
+# - name: GitHub CLI
+#   env:
+#     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#     PR_NUMBER: ${{ github.event.number }}
+#   run: gh pr diff ${GITHUB_HEAD_REF} --name-only
 
 # console.log('------')
 # console.log(context)
