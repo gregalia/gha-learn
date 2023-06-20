@@ -4,10 +4,7 @@ name: Get pip Licenses
 env:
   PYTHON_DEPENDENCIES: requirements.txt
 
-on:
-  pull_request:
-    paths:
-      - '${{ env.PYTHON_DEPENDENCIES }}'
+on: pull_request
 
 jobs:
   generate_python_licenses_file:
