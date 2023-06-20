@@ -25,7 +25,7 @@ jobs:
             let options = {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: context.number
+              pull_number: context.payload.pull_request.number
             }
             console.log(options)
             let response = await github.rest.pulls.listFiles(options);
