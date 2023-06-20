@@ -24,7 +24,7 @@ jobs:
               $owner:String!,
               $name:String!,
               $pull_number:Int!,
-              $first:Int!
+              $first:Int!,
               $after:String!
             ) {
               repository(owner:$owner, name:$name){
@@ -52,7 +52,7 @@ jobs:
             }
             while (hasNextPage){
               const response = await github.graphql(query, {...variables, after})
-              const {repository: {pullRequest: {files: {nodes, pageInfo}}} = response
+              const {repository: {pullRequest: {files: {nodes, pageInfo}}}} = response
               hasNextPage = pageInfo.hasNextPage
               console.log(JSON.stringify(nodes, null, 2))
             }
