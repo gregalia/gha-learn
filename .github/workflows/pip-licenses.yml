@@ -25,9 +25,9 @@ jobs:
         run: |
           git fetch --depth=1 $(git remote show -n | head -n 1) $GITHUB_BASE_REF
           git branch
-        # git diff $GITHUB_HEAD_REF..$GITHUB_BASE_REF \
-        #   --name-only --exit-code -- $PYTHON_DEPENDENCIES
-        # echo $?
+          git diff $GITHUB_HEAD_REF..$GITHUB_BASE_REF \
+            --name-only --exit-code -- $PYTHON_DEPENDENCIES
+          echo $?
 
       # - name: Dump ENV
       #   run: printenv
