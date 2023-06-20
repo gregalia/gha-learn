@@ -15,12 +15,13 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-      # with:
-      #   ref: ${{ github.head_ref }}
-      # fetch-depth: 100
+        with:
+          fetch-depth: 0
+      # ref: ${{ github.head_ref }}
 
       - name: Check Git Diff
         run: |
+          git branch --show-current
           git diff $GITHUB_HEAD_REF..$GITHUB_BASE_REF \
             --name-only --exit-code -- requirements.txt
           echo $?
