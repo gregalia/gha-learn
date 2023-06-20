@@ -13,38 +13,46 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Dump ENV
-        run: printenv
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo '$GITHUB_CONTEXT'
-      - name: Get PR Files
-        uses: actions/github-script@v6
-        with:
-          retries: 3
-          script: |
-            let options = {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number
-            }
-            console.log(options)
-            let response = await github.rest.pulls.listFiles(options);
-            console.log(response)
-      - name: GitHub CLI
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.number }}
-        run: gh pr diff ${GITHUB_HEAD_REF} --name-only
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      # with:
+      #   ref: ${{ github.head_ref }}
+      # fetch-depth: 100
+
+      - name: Check Git Diff
+        run: |
+          git diff $GITHUB_HEAD_REF..$GITHUB_BASE_REF \
+            --name-only --exit-code -- requirements.txt
+          echo $?
+
+      # - name: Dump ENV
+      #   run: printenv
+      # - name: Dump GitHub context
+      #   env:
+      #     GITHUB_CONTEXT: ${{ toJson(github) }}
+      #   run: echo '$GITHUB_CONTEXT'
+      # - name: Get PR Files
+      #   uses: actions/github-script@v6
+      #   with:
+      #     retries: 3
+      #     script: |
+      #       let options = {
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         pull_number: context.payload.pull_request.number
+      #       }
+      #       console.log(options)
+      #       let { data } = await github.rest.pulls.listFiles(options);
+      #       console.log()
+      # - name: GitHub CLI
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     PR_NUMBER: ${{ github.event.number }}
+      #   run: gh pr diff ${GITHUB_HEAD_REF} --name-only
+
 # console.log('------')
 # console.log(context)
 
-#       - name: Checkout Repository
-#         uses: actions/checkout@v3
-#         with:
-#           ref: ${{ github.head_ref }}
-#           fetch-depth: 100
 #
 #       - name: Pull and Checkout This branch
 #         run: |
