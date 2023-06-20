@@ -13,6 +13,10 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo '$GITHUB_CONTEXT'
       - name: Get PR Files
         uses: actions/github-script@v6
         with:
