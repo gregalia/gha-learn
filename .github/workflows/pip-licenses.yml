@@ -21,9 +21,8 @@ jobs:
 
       - name: Check Git Diff
         run: |
-          git branch --show-current
-          git diff $GITHUB_HEAD_REF..$GITHUB_BASE_REF \
-            --name-only --exit-code -- requirements.txt
+          git branch
+          git diff $GITHUB_HEAD_REF..$GITHUB_BASE_REF --name-only --exit-code -- $PYTHON_DEPENDENCIES
           echo $?
 
       # - name: Dump ENV
