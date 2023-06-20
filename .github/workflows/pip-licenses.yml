@@ -20,25 +20,45 @@ jobs:
         with:
           retries: 3
           script: |
-            const query = `query($owner:String!, $name:String!, $pull_number:Int!) {
+            const query = `query(
+              $owner:String!,
+              $name:String!,
+              $pull_number:Int!,
+              $first:Int!
+              $after:String!
+            ) {
               repository(owner:$owner, name:$name){
                 pullRequest(number:$pull_number) {
-                  files(first: 100) {
+                  files(first:$first, after:$after) {
                     nodes {
                       changeType
                       path
+                    }
+                    pageInfo {
+                      hasNextPage
+                      endCursor
                     }
                   }
                 }
               }
             }`;
-            const variables = {
+            let hasNextPage = true
+            let variables = {
               owner: context.repo.owner,
               name: context.repo.repo,
-              pull_number: context.payload.pull_request.number
+              pull_number: context.payload.pull_request.number,
+              first: 1,
+              after: ""
             }
-            const result = await github.graphql(query, variables)
-            console.log(JSON.stringify(result))
+            while (hasNextPage){
+              const response = await github.graphql(query, {...variables, after})
+              const {repository: {pullRequest: {files: {nodes, pageInfo}}} = response
+              hasNextPage = pageInfo.hasNextPage
+              console.log(JSON.stringify(nodes, null, 2))
+            }
+
+          # const fileModified Boolean(nodes.filter(file => file.path === 'requirements.txt').length)
+          # console.log(JSON.stringify(result), null, 2)
 
         # with:
       #   retries: 3
