@@ -1,6 +1,8 @@
 name: Get pip Licenses
 run-name: Get pip Licenses
-
+defaults:
+  run:
+    shell: bash
 env:
   PYTHON_DEPENDENCIES: requirements.txt
 
@@ -19,11 +21,13 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.head_ref }}
 
-      - name: Check Git Diff
+      - name: Fetch Base Ref
         run: |
+          git fetch --depth=1 $(git remote show -n | head -n 1) $GITHUB_BASE_REF
           git branch
-          git diff $GITHUB_HEAD_REF..$GITHUB_BASE_REF --name-only --exit-code -- $PYTHON_DEPENDENCIES
-          echo $?
+        # git diff $GITHUB_HEAD_REF..$GITHUB_BASE_REF \
+        #   --name-only --exit-code -- $PYTHON_DEPENDENCIES
+        # echo $?
 
       # - name: Dump ENV
       #   run: printenv
