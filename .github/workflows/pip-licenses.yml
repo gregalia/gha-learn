@@ -25,13 +25,14 @@ jobs:
             let options = {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: ${{ github.event.number }}
+              pull_number: context.number
             }
             console.log(options)
-            console.log('------')
-            console.log(context)
+            let response = await github.rest.pulls.listFiles(options);
+            console.log(response)
 
-# let response = await github.rest.pulls.listFiles(options);
+# console.log('------')
+# console.log(context)
 
 #       - name: Checkout Repository
 #         uses: actions/checkout@v3
