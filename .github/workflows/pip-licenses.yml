@@ -18,11 +18,13 @@ jobs:
         with:
           retries: 3
           script: |
-            let response = await github.rest.pulls.listFiles({
+            let options = {
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.number
-            });
+            }
+            console.log(options)
+            let response = await github.rest.pulls.listFiles(options);
             console.log(response)
 
 #       - name: Checkout Repository
