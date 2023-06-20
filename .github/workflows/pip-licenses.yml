@@ -36,7 +36,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.number }}
-        run: gh pr diff ${PR_NUMBER} --name-only
+        run: gh pr diff ${GITHUB_HEAD_REF} --name-only
 # console.log('------')
 # console.log(context)
 
