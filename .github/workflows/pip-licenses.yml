@@ -13,6 +13,8 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
+      - name: Dump ENV
+        run: printenv
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
@@ -30,7 +32,11 @@ jobs:
             console.log(options)
             let response = await github.rest.pulls.listFiles(options);
             console.log(response)
-
+      - name: GitHub CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+        run: gh pr diff ${PR_NUMBER} --name-only
 # console.log('------')
 # console.log(context)
 
