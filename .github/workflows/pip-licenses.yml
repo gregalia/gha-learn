@@ -20,7 +20,7 @@ jobs:
         with:
           retries: 3
           script: |
-            const query = `query($owner:String!, $name:String!, $label:String!) {
+            const query = `query($owner:String!, $name:String!, $pull_number:String!) {
               repository(owner:$owner, name:$name){
                 pullRequest(number:$pull_number) {
                   files(first: 100) {
