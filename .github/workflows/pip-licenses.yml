@@ -1,5 +1,5 @@
 name: Get pip Licenses
-# run-name: ${{ github.actor }} is getting pip licenses
+run-name: Get pip Licenses
 
 env:
   PYTHON_DEPENDENCIES: requirements.txt
@@ -25,11 +25,13 @@ jobs:
             let options = {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: context.number
+              pull_number: ${{ github.event.number }}
             }
             console.log(options)
-            let response = await github.rest.pulls.listFiles(options);
-            console.log(response)
+            console.log('------')
+            console.log(context)
+
+# let response = await github.rest.pulls.listFiles(options);
 
 #       - name: Checkout Repository
 #         uses: actions/checkout@v3
