@@ -48,7 +48,7 @@ jobs:
               name: context.repo.repo,
               pull_number: context.payload.pull_request.number,
               first: 1,
-              after: ""
+              after: null
             }
             while (hasNextPage){
               const response = await github.graphql(query, {...variables, after})
