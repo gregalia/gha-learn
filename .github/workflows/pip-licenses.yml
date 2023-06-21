@@ -53,7 +53,6 @@ jobs:
             while (hasNextPage){
               const response = await github.graphql(query, {...variables, after})
               const {repository: {pullRequest: {files: {nodes, pageInfo}}}} = response
-              { hasNextPage, endCursor}
               {hasNextPage, endCursor: after} = pageInfo
               console.log(JSON.stringify(nodes, null, 2))
             }
