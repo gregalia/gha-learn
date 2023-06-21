@@ -5,9 +5,7 @@ defaults:
     shell: bash
 env:
   PYTHON_DEPENDENCIES: requirements.txt
-
 on: pull_request
-
 jobs:
   generate_python_licenses_file:
     # Permission needed for committing license file
@@ -15,122 +13,12 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Get PR Files
-        uses: actions/github-script@v6
+      - name: Checkout Repository
+        uses: actions/checkout@v3
         with:
-          retries: 3
-          script: |
-            const query = `query(
-              $owner:String!,
-              $name:String!,
-              $pull_number:Int!,
-              $first:Int!,
-              $after:String!
-            ) {
-              repository(owner:$owner, name:$name){
-                pullRequest(number:$pull_number) {
-                  files(first:$first, after:$after) {
-                    nodes {
-                      changeType
-                      path
-                    }
-                    pageInfo {
-                      hasNextPage
-                      endCursor
-                    }
-                  }
-                }
-              }
-            }`;
-            let variables = {
-              owner: context.repo.owner,
-              name: context.repo.repo,
-              pull_number: context.payload.pull_request.number,
-              first: 1,
-            };
-            let after = null;
-            let endCursor = null;
-            let hasNextPage = true;
-            while (hasNextPage){
-              const response = await github.graphql(query, {...variables, after});
-              const {repository: {pullRequest: {files: {nodes, pageInfo}}}} = response;
-              {hasNextPage, endCursor} = pageInfo;
-              hasNextPage = false
-              console.log(JSON.stringify(nodes, null, 2));
-            };
-
-          # const fileModified Boolean(nodes.filter(file => file.path === 'requirements.txt').length)
-          # console.log(JSON.stringify(result), null, 2)
-
-        # with:
-      #   retries: 3
-      #   script: |
-      #     let options = {
-      #       owner: context.repo.owner,
-      #       repo: context.repo.repo,
-      #       pull_number: context.payload.pull_request.number
-      #     }
-      #     console.log(options)
-      #     let { data } = await github.rest.pulls.listFiles(options);
-      #     console.log()
-
-#       - name: Checkout Repository
-#         uses: actions/checkout@v3
-#         with:
-#           fetch-depth: 0
-#           ref: ${{ github.head_ref }}
-#
-#       - name: Fetch Base Ref
-#         run: |
-#           remote=$(git remote show -n | head -n 1)
-#           echo $remote
-#           git fetch --depth=1 $(git remote show -n | head -n 1) $GITHUB_BASE_REF
-#           git branch
-#           git diff $GITHUB_HEAD_REF..$GITHUB_BASE_REF \
-#             --name-only --exit-code -- $PYTHON_DEPENDENCIES
-#           echo $?
-
-# - name: Dump ENV
-#   run: printenv
-# - name: Dump GitHub context
-#   env:
-#     GITHUB_CONTEXT: ${{ toJson(github) }}
-#   run: echo '$GITHUB_CONTEXT'
-
-# - name: GitHub CLI
-#   env:
-#     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#     PR_NUMBER: ${{ github.event.number }}
-#   run: gh pr diff ${GITHUB_HEAD_REF} --name-only
-
-# console.log('------')
-# console.log(context)
-
-#
-#       - name: Pull and Checkout This branch
-#         run: |
-#           git pull --verbose
-#           git checkout --progress ${GITHUB_HEAD_REF}
-# - name: Check Dependencies Diff
-#   run: |
-#     BUILD_DEPENDENCIES_MODIFIED=false
-#     git diff --quiet --diff-filter=AM HEAD^ HEAD -- ${PYTHON_DEPENDENCIES} || BUILD_DEPENDENCIES_MODIFIED=true
-#     echo "BUILD_DEPENDENCIES_MODIFIED=$BUILD_DEPENDENCIES_MODIFIED" >>${GITHUB_ENV}
-# - run: echo ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
-
-# - name: Generate License File Name
-#   if: env.BUILD_DEPENDENCIES_MODIFIED
-#   run: |
-#     LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
-#     echo "LICENSE_FILE=${LICENSE_FILE}" >>${GITHUB_ENV}
-# - name: Run License File Script
-#   if: env.BUILD_DEPENDENCIES_MODIFIED
-#   run: .github/pip-licenses.sh "${LICENSE_FILE}"
-# - name: Push License File to Pull Request Branch
-#   if: ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
-#   run: |
-#     git config --global user.email github-actions[bot]@users.noreply.github.com
-#     git config --global user.name "GitHub Actions"
-#     git add --verbose ${LICENSE_FILE}
-#     git commit --verbose --message="Update license file"
-#     git push --verbose --force origin ${GITHUB_HEAD_REF}
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+      - name: Pull Branches
+        run: |
+          git pull --verbose
+          git branch --verbose
