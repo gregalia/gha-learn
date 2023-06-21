@@ -23,8 +23,10 @@ jobs:
           git config --list
           git branch --verbose
           git pull --verbose
-          git checkout --verbose GITHUB_BASE_REF
+          git checkout ${GITHUB_BASE_REF}
 
           result='no change'
-          git diff --exit-code --name-only GITHUB_HEAD_REF..$GITHUB_BASE_REF -- $PY_DEPS_FILE || result='change'
+          git diff --exit-code --name-only \
+            ${GITHUB_HEAD_REF}..${GITHUB_BASE_REF} \
+            -- ${PY_DEPS_FILE} || result='change'
           echo "$result"
