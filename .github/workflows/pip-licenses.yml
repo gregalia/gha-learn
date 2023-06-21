@@ -47,17 +47,17 @@ jobs:
               name: context.repo.repo,
               pull_number: context.payload.pull_request.number,
               first: 1,
-            }
-            let after = null
-            let endCursor = null
-            let hasNextPage = true
+            };
+            let after = null;
+            let endCursor = null;
+            let hasNextPage = true;
             while (hasNextPage){
-              const response = await github.graphql(query, {...variables, after})
-              const {repository: {pullRequest: {files: {nodes, pageInfo}}}} = response
-              {hasNextPage, endCursor} = pageInfo
-              after = endCursor
-              console.log(JSON.stringify(nodes, null, 2))
-            }
+              const response = await github.graphql(query, {...variables, after});
+              const {repository: {pullRequest: {files: {nodes, pageInfo}}}} = response;
+              {hasNextPage, endCursor} = pageInfo;
+              hasNextPage = false
+              console.log(JSON.stringify(nodes, null, 2));
+            };
 
           # const fileModified Boolean(nodes.filter(file => file.path === 'requirements.txt').length)
           # console.log(JSON.stringify(result), null, 2)
