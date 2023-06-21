@@ -49,6 +49,7 @@ jobs:
               first: 1,
             }
             let after = null
+            let endCursor = null
             let hasNextPage = true
             while (hasNextPage){
               const response = await github.graphql(query, {...variables, after})
