@@ -4,7 +4,7 @@ defaults:
   run:
     shell: bash
 env:
-  PYTHON_DEPENDENCIES: requirements.txt
+  PY_DEPS_FILE: requirements.txt
 on: pull_request
 jobs:
   generate_python_licenses_file:
@@ -17,12 +17,14 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: ${{ github.head_ref }}
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-          ref: ${{ github.base_ref }}
-      - name: Pull Branches
+        # ref: ${{ github.head_ref }}
+      - name: Do git stuff
         run: |
-          git branch --verbose
+          git branch --verbose | xargs -t
+          git pull --verbose | xargs -t
+          git checkout --verbose GITHUB_HEAD_REF | xargs -t
+          git checkout --verbose GITHUB_BASE_REF | xargs -t
+
+          result='no change' | xargs -t
+          git diff --exit-code --name-only GITHUB_HEAD_REF..$GITHUB_BASE_REF -- $PY_DEPS_FILE || result='change' | xargs -t
+          echo "$result" | xargs -t
