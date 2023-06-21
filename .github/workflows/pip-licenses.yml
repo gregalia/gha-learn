@@ -26,10 +26,4 @@ jobs:
           git checkout ${GITHUB_BASE_REF}
 
           TRIGGER_FILE_CHANGED=0
-          git diff --silent ${GITHUB_HEAD_REF}..${GITHUB_BASE_REF} \
-            -- ${PY_DEPS_FILE} || TRIGGER_FILE_CHANGED=1
-          echo TRIGGER_FILE_CHANGED=${TRIGGER_FILE_CHANGED} >>${GITHUB_ENV}
-      - run: |
-          printenv
-          ((TRIGGER_FILE_CHANGED)) && echo "yes"
-          ((TRIGGER_FILE_CHANGED)) || echo "no"
+          git diff --name-only ${GITHUB_HEAD_REF}..${GITHUB_BASE_REF} -- ${PY_DEPS_FILE}
