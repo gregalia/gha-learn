@@ -16,6 +16,7 @@ Generated with [`pip-licenses`](https://pypi.org/project/pip-licenses/) on 2023-
 | click              | 8.1.3    | BSD License                                        |
 | idna               | 3.4      | BSD License                                        |
 | itsdangerous       | 2.1.2    | BSD License                                        |
+| pypdf              | 3.10.0   | BSD License                                        |
 | reportlab          | 4.0.4    | BSD License                                        |
 | starlette          | 0.28.0   | BSD License                                        |
 | Pillow             | 9.5.0    | Historical Permission Notice and Disclaimer (HPND) |
@@ -42,7 +43,7 @@ Generated with [`pip-licenses`](https://pypi.org/project/pip-licenses/) on 2023-
 | 2     | Apache Software License                            |
 | 1     | Apache Software License; MIT License               |
 | 1     | Apache-2.0                                         |
-| 10    | BSD License                                        |
+| 11    | BSD License                                        |
 | 1     | Historical Permission Notice and Disclaimer (HPND) |
 | 1     | LGPLv3                                             |
 | 12    | MIT License                                        |
