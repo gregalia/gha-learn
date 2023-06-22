@@ -4,7 +4,7 @@ defaults:
   run:
     shell: bash
 env:
-  PY_DEPS_FILE: requirements.txt
+  WATCH_FILE: requirements.txt
 on: pull_request
 jobs:
   generate_python_licenses_file:
@@ -18,22 +18,17 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.head_ref }}
-      - name: Do git stuff
+      - name: Set WATCH_FILE_CHANGED_IN_PR
         run: |
-          git config --list
-          git branch --verbose
           git pull --verbose
-          git checkout ${GITHUB_BASE_REF}
+          git checkout "${GITHUB_BASE_REF}"
 
-          echo "git diff --exit-code --name-only ${GITHUB_HEAD_REF}..${GITHUB_BASE_REF} -- ${PY_DEPS_FILE}"
+          git diff --exit-code --name-status "${GITHUB_HEAD_REF}..${GITHUB_BASE_REF}" -- "${WATCH_FILE}" ||
+            WATCH_FILE_CHANGED_IN_PR=1
 
-          if git diff --exit-code --name-only ${GITHUB_HEAD_REF}..${GITHUB_BASE_REF} -- ${PY_DEPS_FILE}; then
-            echo "no change"
-          else
-            echo "yes change"
-          fi
+          echo "WATCH_FILE_CHANGED_IN_PR=${WATCH_FILE_CHANGED_IN_PR:-0}" >>${GITHUB_ENV}
 
-      # - run: |
-      #     printenv
-      #     ((TRIGGER_FILE_CHANGED)) && echo "yes"
-      #     ((TRIGGER_FILE_CHANGED)) || echo "no"
+      - run: |
+          printenv
+          ((WATCH_FILE_CHANGED_IN_PR)) && echo "yes"
+          ((WATCH_FILE_CHANGED_IN_PR)) || echo "no"
