@@ -31,5 +31,5 @@ jobs:
           echo TRIGGER_FILE_CHANGED=${TRIGGER_FILE_CHANGED} >>${GITHUB_ENV}
       - run: |
           printenv
-          $((TRIGGER_FILE_CHANGED)) && echo "yes"
-          $((TRIGGER_FILE_CHANGED)) || echo "no"
+          ((TRIGGER_FILE_CHANGED)) && echo "yes"
+          ((TRIGGER_FILE_CHANGED)) || echo "no"
