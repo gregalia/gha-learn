@@ -1,3 +1,4 @@
 reportlab
 pdf417
 firetail
+pypdf
