@@ -31,15 +31,12 @@ jobs:
           echo "WATCH_FILE_CHANGED_IN_PR=${WATCH_FILE_CHANGED_IN_PR:-false}" >>"${GITHUB_ENV}"
       - name: Dump GitHub context
         env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo $GITHUB_CONTEXT
+          GITHUB_ENV_CONTEXT: ${{ toJson(github.env) }}
+        run: echo $GITHUB_ENV_CONTEXT
       - name: Dump steps context
         env:
           STEPS_CONTEXT: ${{ toJson(steps) }}
         run: echo $STEPS_CONTEXT
-      - name: Test if switch
-        if: ${{ toJson(github.env.WATCH_FILE_CHANGED_IN_PR) }}
-        run: echo 'success!'
       - name: Test if switch 2
         if: github.env.WATCH_FILE_CHANGED_IN_PR == 'true'
         run: echo 'success!'
