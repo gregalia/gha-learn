@@ -1,10 +1,16 @@
 name: Get pip Licenses
-run-name: ${{ github.actor }} is getting pip licenses
-on: pull_request
+run-name: Get pip Licenses
+defaults:
+  run:
+    shell: bash
 env:
-  PYTHON_DEPENDENCIES: requirements.txt
+  WATCH_FILE: requirements.txt
+  FILE_TO_COMMIT: LICENSES.md
+  SCRIPT: .github/pip-licenses.sh
+  PY_BUILD_DEPS_FILE: requirements.txt
+on: pull_request
 jobs:
-  Output-Python-Licenses:
+  generate_python_licenses_file:
     # Permission needed for committing license file
     permissions:
       contents: write
@@ -13,31 +19,56 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.head_ref }}
-      - name: Pull and Checkout This branch
+          fetch-depth: 0
+          ref: ${{ github.base_ref }}
+      - name: 'Set Condition: WATCH_FILE_CHANGED_IN_PR'
         run: |
           git pull --verbose
-          git checkout --progress ${GITHUB_HEAD_REF}
-      - name: Check Dependencies Diff
+          git checkout "${GITHUB_HEAD_REF}"
+          git diff --exit-code --name-status "${GITHUB_HEAD_REF}..${GITHUB_BASE_REF}" -- "${WATCH_FILE}" ||
+            WATCH_FILE_CHANGED_IN_PR=1
+          echo "WATCH_FILE_CHANGED_IN_PR=${WATCH_FILE_CHANGED_IN_PR:-0}" >>"${GITHUB_ENV}"
+      - name: Conditionally Run License File Generator Script
+        if: env.WATCH_FILE_CHANGED_IN_PR
+        # Create two environments to exclude pip-licenses dependencies from output
         run: |
-          BUILD_DEPENDENCIES_MODIFIED=false
-          git diff --cached --name-only --diff-filter=AM -- ${PYTHON_DEPENDENCIES}
-          git diff --cached --quiet -- ${PYTHON_DEPENDENCIES} || BUILD_DEPENDENCIES_MODIFIED=true
-          echo "BUILD_DEPENDENCIES_MODIFIED=$BUILD_DEPENDENCIES_MODIFIED" >>${GITHUB_ENV}
-      - run: echo ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
-      # - name: Generate License File Name
-      #   if: env.BUILD_DEPENDENCIES_MODIFIED
-      #   run: |
-      #     LICENSE_FILE=$(basename ${GITHUB_REPOSITORY})-pip-licenses.md
-      #     echo "LICENSE_FILE=${LICENSE_FILE}" >>${GITHUB_ENV}
-      # - name: Run License File Script
-      #   if: env.BUILD_DEPENDENCIES_MODIFIED
-      #   run: .github/pip-licenses.sh "${LICENSE_FILE}"
-      # - name: Push License File to Pull Request Branch
-      #   if: ${{ env.BUILD_DEPENDENCIES_MODIFIED }}
-      #   run: |
-      #     git config --global user.email github-actions[bot]@users.noreply.github.com
-      #     git config --global user.name "GitHub Actions"
-      #     git add --verbose ${LICENSE_FILE}
-      #     git commit --verbose --message="Update license file"
-      #     git push --verbose --force origin ${GITHUB_HEAD_REF}
+          environments=(
+            build-depencies-env
+            pip-licenses-env
+          )
+          echo "${environments[0]}" | tr [:lower:] [:upper:]
+          python3 -m venv "${environments[0]}"
+          source "${environments[0]}/bin/activate"
+          pip install -r "${PY_BUILD_DEPS_FILE}"
+          deactivate
+          echo "${environments[1]}" | tr [:lower:] [:upper:]
+          python3 -m venv "${environments[1]}"
+          source "${environments[1]}/bin/activate"
+          pip install pip-licenses
+          {
+            echo -e "# Software Licenses for Build Dependencies of the ${GITHUB_REPOSITORY} Repository\n"
+            echo -e "Generated with [\`pip-licenses\`](https://pypi.org/project/pip-licenses/) on $(date -u +%F)\n"
+            pip-licenses \
+              --python="./${environments[0]}/bin/python3" \
+              --from=mixed \
+              --order=license \
+              --format=markdown
+            echo -e "\n## Summary\n"
+            pip-licenses \
+              --python="./${environments[0]}/bin/python3" \
+              --from=mixed \
+              --order=license \
+              --format=markdown \
+              --summary
+          } >"${FILE_TO_COMMIT}"
+          deactivate
+          rm -fr "${environments[@]}"
+          cat "${FILE_TO_COMMIT}"
+      - name: Conditionally Commit and Push Output File
+        if: env.WATCH_FILE_CHANGED_IN_PR
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git add --verbose "${FILE_TO_COMMIT}"
+          git commit --verbose --message="Update license file"
+          git push --verbose origin "${GITHUB_HEAD_REF}"
