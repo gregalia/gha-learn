@@ -74,11 +74,10 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
           git add --verbose "${FILE_TO_COMMIT}"
-          commit_msg=<<EOF
-          Update license file with new dependencies
+          read -rd '' commit_msg <<EOF
+          Update license file with new build dependencies
 
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit! Aenean
-          commodo ligula eget dolor. Aenean massa;
+          [Link to bot repo](https://github.com)
           EOF
           git commit --verbose --message="${commit_msg}"
           git push --verbose origin "${GITHUB_HEAD_REF}"
