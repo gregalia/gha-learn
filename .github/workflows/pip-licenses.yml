@@ -22,53 +22,69 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.base_ref }}
       - name: 'Set Condition: WATCH_FILE_CHANGED_IN_PR'
+        id: watchfile_changed_in_pr
         run: |
           git pull --verbose
           git checkout "${GITHUB_HEAD_REF}"
           git diff --exit-code --name-status "${GITHUB_HEAD_REF}..${GITHUB_BASE_REF}" -- "${WATCH_FILE}" ||
             WATCH_FILE_CHANGED_IN_PR=true
           echo "WATCH_FILE_CHANGED_IN_PR=${WATCH_FILE_CHANGED_IN_PR:-false}" >>"${GITHUB_ENV}"
-      - name: Conditionally Run License File Generator Script
-        if: env.WATCH_FILE_CHANGED_IN_PR
-        # Create two environments to exclude pip-licenses dependencies from output
-        run: |
-          environments=(
-            build-depencies-env
-            pip-licenses-env
-          )
-          echo "${environments[0]}" | tr [:lower:] [:upper:]
-          python3 -m venv "${environments[0]}"
-          source "${environments[0]}/bin/activate"
-          pip install -r "${PY_BUILD_DEPS_FILE}"
-          deactivate
-          echo "${environments[1]}" | tr [:lower:] [:upper:]
-          python3 -m venv "${environments[1]}"
-          source "${environments[1]}/bin/activate"
-          pip install pip-licenses
-          {
-            echo -e "# Software Licenses for Build Dependencies of the ${GITHUB_REPOSITORY} Repository\n"
-            echo -e "Generated with [\`pip-licenses\`](https://pypi.org/project/pip-licenses/) on $(date -u +%F)\n"
-            pip-licenses \
-              --python="./${environments[0]}/bin/python3" \
-              --from=mixed \
-              --order=license \
-              --format=markdown
-            echo -e "\n## Summary\n"
-            pip-licenses \
-              --python="./${environments[0]}/bin/python3" \
-              --from=mixed \
-              --order=license \
-              --format=markdown \
-              --summary
-          } >"${FILE_TO_COMMIT}"
-          deactivate
-          rm -fr "${environments[@]}"
-          cat "${FILE_TO_COMMIT}"
-      - name: Conditionally Commit and Push Output File
-        if: env.WATCH_FILE_CHANGED_IN_PR
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email github-actions[bot]@users.noreply.github.com
-          git add --verbose "${FILE_TO_COMMIT}"
-          git commit --verbose --message="Update license file"
-          git push --verbose origin "${GITHUB_HEAD_REF}"
+      - name: Dump ENV context
+        env:
+          ENV: ${{ toJson(github.env) }}
+        run: echo '$ENV'
+      - name: Test if switch
+        if: ${{ toJson(github.env.WATCH_FILE_CHANGED_IN_PR) }}
+        run: echo 'success!'
+      - name: Test if switch 2
+        if: github.env.WATCH_FILE_CHANGED_IN_PR == 'true'
+        run: echo 'success!'
+      - name: Test if switch 3
+        if: github.env.WATCH_FILE_CHANGED_IN_PR
+        run: echo 'success!'
+#
+#
+#       - name: Conditionally Run License File Generator Script
+#         if: env.WATCH_FILE_CHANGED_IN_PR
+#         # Create two environments to exclude pip-licenses dependencies from output
+#         run: |
+#           environments=(
+#             build-depencies-env
+#             pip-licenses-env
+#           )
+#           echo "${environments[0]}" | tr [:lower:] [:upper:]
+#           python3 -m venv "${environments[0]}"
+#           source "${environments[0]}/bin/activate"
+#           pip install -r "${PY_BUILD_DEPS_FILE}"
+#           deactivate
+#           echo "${environments[1]}" | tr [:lower:] [:upper:]
+#           python3 -m venv "${environments[1]}"
+#           source "${environments[1]}/bin/activate"
+#           pip install pip-licenses
+#           {
+#             echo -e "# Software Licenses for Build Dependencies of the ${GITHUB_REPOSITORY} Repository\n"
+#             echo -e "Generated with [\`pip-licenses\`](https://pypi.org/project/pip-licenses/) on $(date -u +%F)\n"
+#             pip-licenses \
+#               --python="./${environments[0]}/bin/python3" \
+#               --from=mixed \
+#               --order=license \
+#               --format=markdown
+#             echo -e "\n## Summary\n"
+#             pip-licenses \
+#               --python="./${environments[0]}/bin/python3" \
+#               --from=mixed \
+#               --order=license \
+#               --format=markdown \
+#               --summary
+#           } >"${FILE_TO_COMMIT}"
+#           deactivate
+#           rm -fr "${environments[@]}"
+#           cat "${FILE_TO_COMMIT}"
+#       - name: Conditionally Commit and Push Output File
+#         if: env.WATCH_FILE_CHANGED_IN_PR
+#         run: |
+#           git config user.name github-actions[bot]
+#           git config user.email github-actions[bot]@users.noreply.github.com
+#           git add --verbose "${FILE_TO_COMMIT}"
+#           git commit --verbose --message="Update license file"
+#           git push --verbose origin "${GITHUB_HEAD_REF}"
