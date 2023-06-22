@@ -21,11 +21,13 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.base_ref }}
-      - name: 'Set Condition: WATCH_FILE_CHANGED_IN_PR'
-        # diff fails if no switch/checkout between diffed branches
+      - name: Set Up Diffing
         run: |
           git pull --verbose
           git checkout "${GITHUB_HEAD_REF}"
+      - name: 'Set Condition: WATCH_FILE_CHANGED_IN_PR'
+        # diff fails if no switch/checkout between diffed branches
+        run: |
           git diff --exit-code --name-status "${GITHUB_HEAD_REF}..${GITHUB_BASE_REF}" -- "${WATCH_FILE}" ||
             WATCH_FILE_CHANGED_IN_PR=true
           echo "WATCH_FILE_CHANGED_IN_PR=${WATCH_FILE_CHANGED_IN_PR:-false}" >>"${GITHUB_ENV}"
@@ -68,8 +70,14 @@ jobs:
           rm -fr "${environments[@]}"
           cat "${FILE_TO_COMMIT}"
           exit $status
+      - name: 'Set Condition: WATCH_FILE_CHANGED_IN_WORKFLOW'
+        # diff fails if no switch/checkout between diffed branches
+        run: |
+          git diff --exit-code --name-status -- "${WATCH_FILE}" || 
+            WATCH_FILE_CHANGED_IN_WORKFLOW=true
+          echo "WATCH_FILE_CHANGED_IN_WORKFLOW=${WATCH_FILE_CHANGED_IN_WORKFLOW:-false}" >>"${GITHUB_ENV}"
       - name: Conditionally Commit and Push Output File
-        if: fromJson(env.WATCH_FILE_CHANGED_IN_PR)
+        if: fromJson(env.WATCH_FILE_CHANGED_IN_WORKFLOW)
         run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
