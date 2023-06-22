@@ -75,8 +75,10 @@ jobs:
           git config user.email github-actions[bot]@users.noreply.github.com
           git add --verbose "${FILE_TO_COMMIT}"
 
-          printf -v commit_msg "Update license file with new build dependencies\n
+          printf -v commit_msg "Update license file with new build dependencies\n\n
           [Link to bot repo](https://github.com)"
+
+          echo "${commit_msg}"
 
           git commit --verbose --message="${commit_msg}"
           git push --verbose origin "${GITHUB_HEAD_REF}"
