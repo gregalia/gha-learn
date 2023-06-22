@@ -4,7 +4,7 @@ defaults:
   run:
     shell: bash
 env:
-  WATCH_FILE: requirements.txt
+  WATCH_FILE: .github/workflows/pip-licenses.yml
   FILE_TO_COMMIT: LICENSES.md
   SCRIPT: .github/pip-licenses.sh
   PY_BUILD_DEPS_FILE: requirements.txt
@@ -29,21 +29,32 @@ jobs:
           git diff --exit-code --name-status "${GITHUB_HEAD_REF}..${GITHUB_BASE_REF}" -- "${WATCH_FILE}" ||
             WATCH_FILE_CHANGED_IN_PR=true
           echo "WATCH_FILE_CHANGED_IN_PR=${WATCH_FILE_CHANGED_IN_PR:-false}" >>"${GITHUB_ENV}"
-      - name: Dump GitHub context
-        env:
-          GITHUB_ENV_CONTEXT: ${{ toJson(github.env) }}
-        run: echo $GITHUB_ENV_CONTEXT
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo $STEPS_CONTEXT
-      - name: Test if switch 2
-        if: github.env.WATCH_FILE_CHANGED_IN_PR == 'true'
-        run: echo 'success!'
-      - name: Test if switch 3
-        if: github.env.WATCH_FILE_CHANGED_IN_PR
-        run: echo 'success!'
-#
+      # - name: Dump GitHub context
+      #   env:
+      #     GITHUB_ENV_CONTEXT: ${{ toJson(github.env) }}
+      #   run: echo $GITHUB_ENV_CONTEXT
+      # - name: Test if switch 2
+      #   if: github.env.WATCH_FILE_CHANGED_IN_PR == 'true'
+      #   run: echo 'success!'
+      # - name: Test if switch 3
+      #   if: github.env.WATCH_FILE_CHANGED_IN_PR
+      #   run: echo 'success!'
+      - run: |
+          echo '${{ github.env.WATCH_FILE_CHANGED_IN_PR }}'
+          echo '${{ fromJson(github.env.WATCH_FILE_CHANGED_IN_PR) }}'
+      - if: fromJson(github.env.WATCH_FILE_CHANGED_IN_PR)
+        run: |
+          echo yes
+      - if: github.env.WATCH_FILE_CHANGED_IN_PR
+        run: |
+          echo yes
+      - if: !fromJson(github.env.WATCH_FILE_CHANGED_IN_PR)
+        run: |
+          echo yes
+      - if: !github.env.WATCH_FILE_CHANGED_IN_PR
+        run: |
+          echo yes
+
 #
 #       - name: Conditionally Run License File Generator Script
 #         if: env.WATCH_FILE_CHANGED_IN_PR
