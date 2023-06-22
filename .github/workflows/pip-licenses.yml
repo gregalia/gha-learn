@@ -47,7 +47,7 @@ jobs:
           pip install pip-licenses
           {
             echo -e "# Software Licenses for Build Dependencies of the ${GITHUB_REPOSITORY} Repository\n"
-            echo -e "Generated with [`pip-licenses`](https://pypi.org/project/pip-licenses/)\n on $(date -u +%F)\n"
+            echo -e "Generated with [\`pip-licenses\`](https://pypi.org/project/pip-licenses/) on $(date -u +%F)\n"
             pip-licenses \
               --python="./${environments[0]}/bin/python3" \
               --from=mixed \
