@@ -42,9 +42,6 @@ jobs:
       - if: fromJson(env.WATCH_FILE_CHANGED_IN_PR)
         run: |
           echo 'fromJson(env.WATCH_FILE_CHANGED_IN_PR)'
-      - if: !fromJson(env.WATCH_FILE_CHANGED_IN_PR)
-        run: |
-          echo '!fromJson(env.WATCH_FILE_CHANGED_IN_PR)'
 
 #
 #       - name: Conditionally Run License File Generator Script
