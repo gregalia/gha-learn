@@ -26,8 +26,8 @@ jobs:
           git pull --verbose
           git checkout "${GITHUB_HEAD_REF}"
           git diff --exit-code --name-status "${GITHUB_HEAD_REF}..${GITHUB_BASE_REF}" -- "${WATCH_FILE}" ||
-            WATCH_FILE_CHANGED_IN_PR=1
-          echo "WATCH_FILE_CHANGED_IN_PR=${WATCH_FILE_CHANGED_IN_PR:-0}" >>"${GITHUB_ENV}"
+            WATCH_FILE_CHANGED_IN_PR=true
+          echo "WATCH_FILE_CHANGED_IN_PR=${WATCH_FILE_CHANGED_IN_PR:-false}" >>"${GITHUB_ENV}"
       - name: Conditionally Run License File Generator Script
         if: env.WATCH_FILE_CHANGED_IN_PR
         # Create two environments to exclude pip-licenses dependencies from output
