@@ -29,10 +29,14 @@ jobs:
           git diff --exit-code --name-status "${GITHUB_HEAD_REF}..${GITHUB_BASE_REF}" -- "${WATCH_FILE}" ||
             WATCH_FILE_CHANGED_IN_PR=true
           echo "WATCH_FILE_CHANGED_IN_PR=${WATCH_FILE_CHANGED_IN_PR:-false}" >>"${GITHUB_ENV}"
-      - name: Dump ENV context
+      - name: Dump GitHub context
         env:
-          ENV: ${{ toJson(github.env) }}
-        run: echo '$ENV'
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo '$GITHUB_CONTEXT'
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo '$STEPS_CONTEXT'
       - name: Test if switch
         if: ${{ toJson(github.env.WATCH_FILE_CHANGED_IN_PR) }}
         run: echo 'success!'
