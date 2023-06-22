@@ -48,10 +48,10 @@ jobs:
       - if: github.env.WATCH_FILE_CHANGED_IN_PR
         run: |
           echo yes
-      - if: ! fromJson(github.env.WATCH_FILE_CHANGED_IN_PR)
+      - if: ${{ !fromJson(github.env.WATCH_FILE_CHANGED_IN_PR) }}
         run: |
           echo yes
-      - if: ! github.env.WATCH_FILE_CHANGED_IN_PR
+      - if: ${{ ! github.env.WATCH_FILE_CHANGED_IN_PR }}
         run: |
           echo yes
 
