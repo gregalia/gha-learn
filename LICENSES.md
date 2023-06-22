@@ -16,6 +16,7 @@ Generated with [`pip-licenses`](https://pypi.org/project/pip-licenses/) on 2023-
 | click              | 8.1.3    | BSD License                                        |
 | idna               | 3.4      | BSD License                                        |
 | itsdangerous       | 2.1.2    | BSD License                                        |
+| pypdf              | 3.10.0   | BSD License                                        |
 | reportlab          | 4.0.4    | BSD License                                        |
 | starlette          | 0.28.0   | BSD License                                        |
 | Pillow             | 9.5.0    | Historical Permission Notice and Disclaimer (HPND) |
@@ -29,7 +30,6 @@ Generated with [`pip-licenses`](https://pypi.org/project/pip-licenses/) on 2023-
 | exceptiongroup     | 1.1.1    | MIT License                                        |
 | inflection         | 0.5.1    | MIT License                                        |
 | jsonschema         | 4.17.3   | MIT License                                        |
-| pdf417             | 0.8.1    | MIT License                                        |
 | pyrsistent         | 0.19.3   | MIT License                                        |
 | urllib3            | 2.0.3    | MIT License                                        |
 | certifi            | 2023.5.7 | Mozilla Public License 2.0 (MPL 2.0)               |
@@ -42,9 +42,9 @@ Generated with [`pip-licenses`](https://pypi.org/project/pip-licenses/) on 2023-
 | 2     | Apache Software License                            |
 | 1     | Apache Software License; MIT License               |
 | 1     | Apache-2.0                                         |
-| 10    | BSD License                                        |
+| 11    | BSD License                                        |
 | 1     | Historical Permission Notice and Disclaimer (HPND) |
 | 1     | LGPLv3                                             |
-| 12    | MIT License                                        |
+| 11    | MIT License                                        |
 | 1     | Mozilla Public License 2.0 (MPL 2.0)               |
 | 1     | Python Software Foundation License                 |
