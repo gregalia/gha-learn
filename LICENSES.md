@@ -30,7 +30,6 @@ Generated with [`pip-licenses`](https://pypi.org/project/pip-licenses/) on 2023-
 | exceptiongroup     | 1.1.1    | MIT License                                        |
 | inflection         | 0.5.1    | MIT License                                        |
 | jsonschema         | 4.17.3   | MIT License                                        |
-| pdf417             | 0.8.1    | MIT License                                        |
 | pyrsistent         | 0.19.3   | MIT License                                        |
 | urllib3            | 2.0.3    | MIT License                                        |
 | certifi            | 2023.5.7 | Mozilla Public License 2.0 (MPL 2.0)               |
@@ -46,6 +45,6 @@ Generated with [`pip-licenses`](https://pypi.org/project/pip-licenses/) on 2023-
 | 11    | BSD License                                        |
 | 1     | Historical Permission Notice and Disclaimer (HPND) |
 | 1     | LGPLv3                                             |
-| 12    | MIT License                                        |
+| 11    | MIT License                                        |
 | 1     | Mozilla Public License 2.0 (MPL 2.0)               |
 | 1     | Python Software Foundation License                 |
