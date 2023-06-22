@@ -1,4 +1,7 @@
-# gregalia/gha-learn Licenses
+# Software Licenses for Build Dependencies of the gregalia/gha-learn Repository
+
+Generated with [](https://pypi.org/project/pip-licenses/)
+ on 2023-06-22
 
 | Name               | Version  | License                                            |
 |--------------------|----------|----------------------------------------------------|
