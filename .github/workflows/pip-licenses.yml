@@ -5,7 +5,7 @@ defaults:
     shell: bash
 env:
   WATCH_FILE: requirements.txt
-  FILE_TO_COMMIT: LICENSES.md
+  COMMIT_FILE: LICENSES.md
   SCRIPT: .github/pip-licenses.sh
   PY_BUILD_DEPS_FILE: requirements.txt
 on: pull_request
@@ -22,16 +22,23 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.base_ref }}
       - name: Set Up Diffing
+        # diff fails if no switch/checkout between diffed branches
         run: |
           git pull --verbose
           git checkout "${GITHUB_HEAD_REF}"
       - name: 'Set Condition: WATCH_FILE_CHANGED_IN_PR'
-        # diff fails if no switch/checkout between diffed branches
         run: |
           git diff --exit-code --name-status "${GITHUB_HEAD_REF}..${GITHUB_BASE_REF}" -- "${WATCH_FILE}" ||
             WATCH_FILE_CHANGED_IN_PR=true
           echo "WATCH_FILE_CHANGED_IN_PR=${WATCH_FILE_CHANGED_IN_PR:-false}" >>"${GITHUB_ENV}"
-      - name: Conditionally Run License File Generator Script
+      - name: Setup Python Version and Caching
+        if: fromJson(env.WATCH_FILE_CHANGED_IN_PR)
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+          cache-dependency-path: '**/requirements*.txt'
+      - name: If WATCH_FILE_CHANGED_IN_PR, Run License File Generator Script
         # Need fromJson to cast true/false string to boolean
         if: fromJson(env.WATCH_FILE_CHANGED_IN_PR)
         # Create two environments to exclude pip-licenses dependencies from output
@@ -64,29 +71,25 @@ jobs:
                 --order=license \
                 --format=markdown \
                 --summary
-          } >"${FILE_TO_COMMIT}"
+          } >"${COMMIT_FILE}"
           status=$?
           deactivate
           rm -fr "${environments[@]}"
-          cat "${FILE_TO_COMMIT}"
+          cat "${COMMIT_FILE}"
           exit $status
-      - name: 'Set Condition: WATCH_FILE_CHANGED_IN_WORKFLOW'
-        # diff fails if no switch/checkout between diffed branches
+      - name: 'Set Condition: COMMIT_FILE_CHANGED_IN_WORKFLOW'
         run: |
-          git diff --exit-code --name-status -- "${WATCH_FILE}" || 
-            WATCH_FILE_CHANGED_IN_WORKFLOW=true
-          echo "WATCH_FILE_CHANGED_IN_WORKFLOW=${WATCH_FILE_CHANGED_IN_WORKFLOW:-false}" >>"${GITHUB_ENV}"
-      - name: Conditionally Commit and Push Output File
-        if: fromJson(env.WATCH_FILE_CHANGED_IN_WORKFLOW)
+          git diff --exit-code --name-status -- "${COMMIT_FILE}" || 
+            COMMIT_FILE_CHANGED_IN_WORKFLOW=true
+          echo "COMMIT_FILE_CHANGED_IN_WORKFLOW=${COMMIT_FILE_CHANGED_IN_WORKFLOW:-false}" >>"${GITHUB_ENV}"
+      - name: If COMMIT_FILE_CHANGED_IN_WORKFLOW, Commit and Push
+        if: fromJson(env.COMMIT_FILE_CHANGED_IN_WORKFLOW)
         run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
-          git add --verbose "${FILE_TO_COMMIT}"
-
+          git add --verbose "${COMMIT_FILE}"
           printf -v commit_msg "Update license file with new build dependencies\n\n
           [Link to bot repo](https://github.com)"
-
           echo "${commit_msg}"
-
           git commit --verbose --message="${commit_msg}"
           git push --verbose origin "${GITHUB_HEAD_REF}"
