@@ -29,30 +29,25 @@ jobs:
           git diff --exit-code --name-status "${GITHUB_HEAD_REF}..${GITHUB_BASE_REF}" -- "${WATCH_FILE}" ||
             WATCH_FILE_CHANGED_IN_PR=true
           echo "WATCH_FILE_CHANGED_IN_PR=${WATCH_FILE_CHANGED_IN_PR:-false}" >>"${GITHUB_ENV}"
-      # - name: Dump GitHub context
-      #   env:
-      #     GITHUB_ENV_CONTEXT: ${{ toJson(github.env) }}
-      #   run: echo $GITHUB_ENV_CONTEXT
-      # - name: Test if switch 2
-      #   if: github.env.WATCH_FILE_CHANGED_IN_PR == 'true'
-      #   run: echo 'success!'
-      # - name: Test if switch 3
-      #   if: github.env.WATCH_FILE_CHANGED_IN_PR
-      #   run: echo 'success!'
+      - name: Dump env context
+        env:
+          ENV_CONTEXT: ${{ toJson(env) }}
+        run: echo $ENV_CONTEXT
       - run: |
-          echo '${{ github.env.WATCH_FILE_CHANGED_IN_PR }}'
-      - if: fromJson(github.env.WATCH_FILE_CHANGED_IN_PR)
+          echo '${{ env.WATCH_FILE_CHANGED_IN_PR }}'
+          echo '${{ fromJson(env.WATCH_FILE_CHANGED_IN_PR) }}'
+      - if: env.WATCH_FILE_CHANGED_IN_PR
         run: |
-          echo yes
-      - if: github.env.WATCH_FILE_CHANGED_IN_PR
+          echo 'env.WATCH_FILE_CHANGED_IN_PR'
+      - if: fromJson(env.WATCH_FILE_CHANGED_IN_PR)
         run: |
-          echo yes
-      - if: ${{ !fromJson(github.env.WATCH_FILE_CHANGED_IN_PR) }}
+          echo 'fromJson(env.WATCH_FILE_CHANGED_IN_PR)'
+      - if: !env.WATCH_FILE_CHANGED_IN_PR
         run: |
-          echo yes
-      - if: ${{ ! github.env.WATCH_FILE_CHANGED_IN_PR }}
+          echo '!env.WATCH_FILE_CHANGED_IN_PR'
+      - if: !fromJson(env.WATCH_FILE_CHANGED_IN_PR)
         run: |
-          echo yes
+          echo '!fromJson(env.WATCH_FILE_CHANGED_IN_PR)'
 
 #
 #       - name: Conditionally Run License File Generator Script
