@@ -32,6 +32,7 @@ jobs:
         # also, unknown how to store result as boolean so have to fromJson() the result
         run: |
           var_name=WATCH_FILE_CHANGED_IN_PR
+          touch "${WATCH_FILE}"
           git diff --exit-code --name-status "${GITHUB_HEAD_REF}..${GITHUB_BASE_REF}" -- "${WATCH_FILE}" &&
             result=false ||
             result=true
@@ -97,6 +98,7 @@ jobs:
       - name: 'Set Condition: COMMIT_FILE_CHANGED_IN_WORKFLOW'
         run: |
           var_name=COMMIT_FILE_CHANGED_IN_WORKFLOW
+          touch "${COMMIT_FILE}"
           git diff --exit-code --name-status -- "${COMMIT_FILE}" &&
             result=false ||
             result=true
