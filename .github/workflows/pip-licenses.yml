@@ -32,7 +32,6 @@ jobs:
         # also, unknown how to store result as boolean so have to fromJson() the result
         run: |
           var_name=WATCH_FILE_CHANGED_IN_PR
-          touch "${WATCH_FILE}"
           git diff --exit-code --name-status "${GITHUB_HEAD_REF}..${GITHUB_BASE_REF}" -- "${WATCH_FILE}" &&
             result=false ||
             result=true
@@ -58,20 +57,19 @@ jobs:
             pip-licenses-env
           )
 
-          echo "::group::$(echo "${environments[0]}" | tr '[:lower:]' '[:upper:]')"
+          echo "::group::${environments[0]}"
           python3 -m venv "${environments[0]}"
           source "${environments[0]}/bin/activate"
           pip install -r "${PY_BUILD_DEPS_FILE}"
           deactivate
           echo "::endgroup::"
 
-          echo "::group::$(echo "${environments[1]}" | tr '[:lower:]' '[:upper:]')"
+          echo "::group::"${environments[1]}"
           python3 -m venv "${environments[1]}"
           source "${environments[1]}/bin/activate"
           pip install pip-licenses
           echo "::endgroup::"
 
-          echo "::group::MARKDOWN"
           {
             echo -e "# Software Licenses for Build Dependencies of the ${GITHUB_REPOSITORY} Repository\n" &&
               echo -e "Generated with [\`pip-licenses\`](https://pypi.org/project/pip-licenses/) on $(date -u +%F)\n" &&
@@ -91,14 +89,11 @@ jobs:
           status=$?
           deactivate
           rm -fr "${environments[@]}"
-          cat "${COMMIT_FILE}"
-          echo "::endgroup::"
           exit $status
 
       - name: 'Set Condition: COMMIT_FILE_CHANGED_IN_WORKFLOW'
         run: |
           var_name=COMMIT_FILE_CHANGED_IN_WORKFLOW
-          touch "${COMMIT_FILE}"
           git diff --exit-code --name-status -- "${COMMIT_FILE}" &&
             result=false ||
             result=true
