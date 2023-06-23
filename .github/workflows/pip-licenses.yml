@@ -5,7 +5,7 @@ defaults:
     shell: bash
 env:
   WATCH_FILE: requirements.txt
-  COMMIT_FILE: LICENSES.md
+  COMMIT_FILE: BUILD_DEPENDENCY_LICENSES.md
   PY_BUILD_DEPS_FILE: requirements.txt
 on: pull_request
 jobs:
@@ -35,7 +35,10 @@ jobs:
           git diff --exit-code --name-status "${GITHUB_HEAD_REF}..${GITHUB_BASE_REF}" -- "${WATCH_FILE}" &&
             result=false ||
             result=true
-          echo "$var_name=${result}" | tee -a "${GITHUB_ENV}"
+          echo "$var_name=${result}" | 
+            tee -a "${GITHUB_ENV}" |
+            xargs printf "### %s\n" |
+            tee -a "${GITHUB_STEP_SUMMARY}"
 
       - name: Setup Python Version and Caching
         if: fromJson(env.WATCH_FILE_CHANGED_IN_PR)
@@ -53,15 +56,21 @@ jobs:
             build-depencies-env
             pip-licenses-env
           )
-          echo "${environments[0]}" | tr "[:lower:]" "[:upper:]"
+
+          echo "::group::$(echo "${environments[0]}" | tr '[':lower:]' '[:upper:])"
           python3 -m venv "${environments[0]}"
           source "${environments[0]}/bin/activate"
           pip install -r "${PY_BUILD_DEPS_FILE}"
           deactivate
-          echo "${environments[1]}" | tr "[:lower:]" "[:upper:]"
+          echo "::endgroup::"
+
+          echo "::group::$(echo "${environments[1]}" | tr '[':lower:]' '[:upper:])"
           python3 -m venv "${environments[1]}"
           source "${environments[1]}/bin/activate"
           pip install pip-licenses
+          echo "::endgroup::"
+
+          echo "::group::MARKDOWN"
           {
             echo -e "# Software Licenses for Build Dependencies of the ${GITHUB_REPOSITORY} Repository\n" &&
               echo -e "Generated with [\`pip-licenses\`](https://pypi.org/project/pip-licenses/) on $(date -u +%F)\n" &&
@@ -82,6 +91,7 @@ jobs:
           deactivate
           rm -fr "${environments[@]}"
           cat "${COMMIT_FILE}"
+          echo "::endgroup::"
           exit $status
 
       - name: 'Set Condition: COMMIT_FILE_CHANGED_IN_WORKFLOW'
@@ -90,8 +100,10 @@ jobs:
           git diff --exit-code --name-status -- "${COMMIT_FILE}" &&
             result=false ||
             result=true
-          echo "$var_name=${result}" | tee -a "${GITHUB_ENV}"
-
+          echo "$var_name=${result}" |
+            tee -a "${GITHUB_ENV}" |
+            xargs printf "### %s\n" |
+            tee -a "${GITHUB_STEP_SUMMARY}"
       - name: If COMMIT_FILE_CHANGED_IN_WORKFLOW, Commit and Push
         if: fromJson(env.COMMIT_FILE_CHANGED_IN_WORKFLOW)
         run: |
