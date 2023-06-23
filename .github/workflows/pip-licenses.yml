@@ -57,14 +57,14 @@ jobs:
             pip-licenses-env
           )
 
-          echo "::group::$(echo "${environments[0]}" | tr '[':lower:]' '[:upper:])"
+          echo "::group::$(echo "${environments[0]}" | tr '[:lower:]' '[:upper:]')"
           python3 -m venv "${environments[0]}"
           source "${environments[0]}/bin/activate"
           pip install -r "${PY_BUILD_DEPS_FILE}"
           deactivate
           echo "::endgroup::"
 
-          echo "::group::$(echo "${environments[1]}" | tr '[':lower:]' '[:upper:])"
+          echo "::group::$(echo "${environments[1]}" | tr '[:lower:]' '[:upper:]')"
           python3 -m venv "${environments[1]}"
           source "${environments[1]}/bin/activate"
           pip install pip-licenses
