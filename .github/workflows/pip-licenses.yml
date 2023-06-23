@@ -37,7 +37,7 @@ jobs:
             result=true
           echo "$var_name=${result}" | 
             tee -a "${GITHUB_ENV}" |
-            xargs printf "### %s\n" |
+            xargs printf "#### %s\n" |
             tee -a "${GITHUB_STEP_SUMMARY}"
 
       - name: Setup Python Version and Caching
@@ -88,25 +88,31 @@ jobs:
           } >"${COMMIT_FILE}"
           status=$?
           deactivate
-          rm -fr "${environments[@]}"
+
+          echo "::group::markdown"
+          cat "${COMMIT_FILE}"
+          echo "::endgroup::"
           exit $status
 
       - name: 'Set Condition: COMMIT_FILE_CHANGED_IN_WORKFLOW'
+        # add file in case it did not exist before this run thus not tracked
         run: |
+          git status --porcelain
           var_name=COMMIT_FILE_CHANGED_IN_WORKFLOW
+          git add --verbose "${COMMIT_FILE}"
           git diff --exit-code --name-status -- "${COMMIT_FILE}" &&
             result=false ||
             result=true
           echo "$var_name=${result}" |
             tee -a "${GITHUB_ENV}" |
-            xargs printf "### %s\n" |
+            xargs printf "#### %s\n" |
             tee -a "${GITHUB_STEP_SUMMARY}"
+            git status --porcelain
       - name: If COMMIT_FILE_CHANGED_IN_WORKFLOW, Commit and Push
         if: fromJson(env.COMMIT_FILE_CHANGED_IN_WORKFLOW)
         run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
-          git add --verbose "${COMMIT_FILE}"
           printf -v commit_msg "Update license file with new build dependencies\n\nBot repo: https://github.com\n"
           git commit --verbose --message="${commit_msg}"
           git push --verbose origin "${GITHUB_HEAD_REF}"
