@@ -111,6 +111,7 @@ jobs:
             xargs printf "#### %s\n" |
             tee -a "${GITHUB_STEP_SUMMARY}"
             git status --porcelain
+
       - name: If COMMIT_FILE_CHANGED_IN_WORKFLOW, Commit and Push
         if: fromJson(env.COMMIT_FILE_CHANGED_IN_WORKFLOW)
         run: |
