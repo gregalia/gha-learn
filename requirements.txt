@@ -2,4 +2,3 @@ reportlab
 firetail
 pypdf
 pdf417
-perm-banana
