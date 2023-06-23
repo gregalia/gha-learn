@@ -100,7 +100,10 @@ jobs:
           git status --porcelain
           var_name=COMMIT_FILE_CHANGED_IN_WORKFLOW
           git add --verbose "${COMMIT_FILE}"
-          git diff --exit-code --name-status -- "${COMMIT_FILE}" &&
+          {
+            git diff --exit-code --name-status -- "${COMMIT_FILE}" &&
+              git diff --exit-code --name-status --cached -- "${COMMIT_FILE}"
+          } &&
             result=false ||
             result=true
           echo "$var_name=${result}" |
