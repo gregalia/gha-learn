@@ -64,14 +64,14 @@ jobs:
           deactivate
           echo "::endgroup::"
 
-          echo "::group::"${environments[1]}"
+          echo "::group::${environments[1]}"
           python3 -m venv "${environments[1]}"
           source "${environments[1]}/bin/activate"
           pip install pip-licenses
           echo "::endgroup::"
 
           {
-            echo -e "# Software Licenses for Build Dependencies of the ${GITHUB_REPOSITORY} Repository\n" &&
+            echo -e "# Software Licenses for Build Dependencies of ${GITHUB_REPOSITORY}\n" &&
               echo -e "Generated with [\`pip-licenses\`](https://pypi.org/project/pip-licenses/) on $(date -u +%F)\n" &&
               pip-licenses \
                 --python="./${environments[0]}/bin/python3" \
