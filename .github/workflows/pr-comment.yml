@@ -12,32 +12,38 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.issue.pull_request && contains(github.event.comment.body, 'magic string')
     steps:
-      - uses: actions/upload-artifact@v3
-        with:
-          name: event.json
-          path: ${{ github.event_path }}
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pr_url="$(
+            jq --raw-output '.issue.pull_request.url' "${GITHUB_EVENT_PATH}"
+          )"
+          pr_branch="$(
+            gh api "${pr_url}" --jq '.head.ref'
+          )"
+          run_id="$(
+            gh run list \
+              --branch "${pr_branch}" \
+              --workflow pip-licenses.yml \
+              --status success \
+              --json databaseId \
+              --jq '.[0].databaseId'
+          )"
+          echo -e "run_id: ${run_id}\ncurrent_branch: ${pr_branch}"
+          gh run download "${run_id}" --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
+          cat "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
 
 
+# current_branch="$(git branch --show-current)"
  
 
 
 
-# - env:
-#       GH_TOKEN: ${{ github.token }}
-#   run: |
-  # current_branch="$(git branch --show-current)"
-# run_id="$(
-#   gh run list \
-#     --branch "${current_branch}" \
-#     --workflow pip-licenses.yml \
-#     --status success \
-#     --json databaseId \
-#     --jq '.[0].databaseId'
-# )"
-# echo -e "run_id: ${run_id}\ncurrent_branch: ${current_branch}"
-# echo "ACTION_REF: ${ACTION_REF}"
-# gh run download $run_id --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
-# cat "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
+# - uses: actions/upload-artifact@v3
+#   with:
+#     name: event.json
+#     path: ${{ github.event_path }}
+
 
 # - uses: xt0rted/pull-request-comment-branch@v2
 #   id: get-comment-branch
