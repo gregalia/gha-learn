@@ -126,7 +126,7 @@ jobs:
             tee -a "${GITHUB_STEP_SUMMARY}"
       - name: Generate and Export Artifact Name
         run: |
-          echo "ARTIFACT=${{ github.run_id }}-${{ env.COMMIT_FILE] }}" \
+          echo "ARTIFACT=${{ github.run_id }}-${{ env.COMMIT_FILE }}" \
             >>"${GITHUB_ENV}"
       - uses: actions/upload-artifact@v3
         with:
