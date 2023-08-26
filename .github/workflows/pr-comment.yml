@@ -25,6 +25,7 @@ jobs:
               --json databaseId \
               --jq '.[0].databaseId'
           )"
+          echo -e "run_id: ${run_id}\ncurrent_branch: ${current_branch}"
           gh run download $run_id --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
           cat "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
 
