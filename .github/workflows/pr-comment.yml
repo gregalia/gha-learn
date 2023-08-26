@@ -7,34 +7,38 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
+env:
+  GH_TOKEN: ${{ github.token }}
 jobs:
   deploy:
     runs-on: ubuntu-latest
     if: github.event.issue.pull_request && contains(github.event.comment.body, 'magic string')
     steps:
-      - env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Get PR Branch
         run: |
           pr_url="$(
             jq --raw-output '.issue.pull_request.url' "${GITHUB_EVENT_PATH}"
           )"
-          echo "${pr_url}"
-          pr_branch="$(
+          echo "PR_BRANCH=$(
             gh api "${pr_url}" --jq '.head.ref'
+          )" >>"${GITHUB_ENV}"
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.PR_BRANCH }}
+      - name: Download Run ID Artifact
+        run: 
+          run_id="$(
+            gh run list \
+              --branch "${pr_branch}" \
+              --workflow pip-licenses.yml \
+              --status success \
+              --json databaseId \
+              --jq '.[0].databaseId'
           )"
-          echo "${pr_branch}"
-
-# run_id="$(
-#   gh run list \
-#     --branch "${pr_branch}" \
-#     --workflow pip-licenses.yml \
-#     --status success \
-#     --json databaseId \
-#     --jq '.[0].databaseId'
-# )"
-# echo -e "run_id: ${run_id}\ncurrent_branch: ${pr_branch}"
-# gh run download "${run_id}" --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
-# cat "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
+          echo "run_id ${run_id}"
+          gh run download "${run_id}" --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
+          cat "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
 
 
 # current_branch="$(git branch --show-current)"
@@ -50,9 +54,7 @@ jobs:
 
 # - uses: xt0rted/pull-request-comment-branch@v2
 #   id: get-comment-branch
-# - uses: actions/checkout@v3
-#   with:
-#     ref: ${{ steps.get.comment-branch.outputs.head_ref }}
+
 
 # - uses: actions/github-script@v6
 #   with:
