@@ -1,3 +1,4 @@
 firetail
 pypdf
 pdf417
+torch

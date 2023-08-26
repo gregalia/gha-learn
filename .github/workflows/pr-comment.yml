@@ -8,6 +8,25 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.issue.pull_request && contains(github.event.comment.body, 'magic string')
     steps:
-      - name: Checkout PR branch
-        uses: actions/checkout@v3
-      - run: git branch
+      - uses: actions/github-script@v6
+        with:
+          result-encoding: string
+          script: |
+            console.log(JSON.stringify( context ))
+
+      # - name: Checkout PR branch
+      #   uses: actions/checkout@v3
+      # - run: |
+      #     git branch --show-current
+      #     gh pr view
+      #     gh pr view --comments
+      #     current_branch="$(git branch --show-current)"
+      #     run_id="$(
+      #       gh run list \
+      #         --branch "${current_branch}"
+      #         --workflow pip-licenses.yml \
+      #         --status success \
+      #         --json databaseId \
+      #         --jq '.[0].databaseId'
+      #     )"
+      #     gh run download $run_id --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
