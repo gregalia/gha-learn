@@ -12,17 +12,18 @@ jobs:
       # - name: Get PR Branch
       #   uses: xt0rted/pull-request-comment-branch@v2
       #   id: get-pr-branch
-      # - name: Checkout PR branch
-      #   uses: actions/checkout@v3
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
+        # with:
+        #   ref: ${{ steps.get-pr-branch.outputs.head_ref }}
+      - run: git branch
+      # - name: Comment back
+      #   uses: actions/github-script@v6
       #   with:
-      #     ref: ${{ steps.get-pr-branch.outputs.head_ref }}
-      - name: Comment back
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: "👋 It's magic!"
-            })
+      #     script: |
+      #       github.rest.issues.createComment({
+      #         issue_number: context.issue.number,
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         body: "👋 It's magic!"
+      #       })
