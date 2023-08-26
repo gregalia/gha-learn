@@ -131,4 +131,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ARTIFACT }}
-          path: ${{ env.ARTIFACT }}
+          path: ${{ env.COMMIT_FILE }}
