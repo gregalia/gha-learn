@@ -30,7 +30,14 @@ jobs:
       - name: Download Run ID Artifact
         run: 
 # run_id="$(
-          gh run list
+          gh run list \
+            --json 'status,workflowName,databaseId,headBranch' | 
+            jq --raw-output '[.[] | select(
+              .workflowName == "Get pip Licenses" and 
+              .status == "completed" and 
+              .headBranch == "${{ env.PR_BRANCH }}"
+            )][0].databaseId'
+
 # gh run list \
 #   -b "${{ env.PR_BRANCH }}" \
 #   -w "${{ env.WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM }}" \
