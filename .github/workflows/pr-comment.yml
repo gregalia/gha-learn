@@ -29,22 +29,19 @@ jobs:
           ref: ${{ env.PR_BRANCH }}
       - name: Download Run ID Artifact
         run: 
-# run_id="$(
-          gh run list \
-            --json 'status,workflowName,databaseId,headBranch' | 
-            jq --raw-output '[.[] | select(
-              .workflowName == "Get pip Licenses" and 
-              .status == "completed" and 
-              .headBranch == "${{ env.PR_BRANCH }}"
-            )][0].databaseId'
+          gh --version
+          gh run list --branch "${{ env.PR_BRANCH }}" --workflow "${{ env.WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM }}" --status success --json databaseId --q '.[0].databaseId'
 
+# run_id="$(
 # gh run list \
-#   -b "${{ env.PR_BRANCH }}" \
-#   -w "${{ env.WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM }}" \
-#   -s success \
-# --json databaseId \
-# --q '.[0].databaseId'
-# )"
+# --json 'status,workflowName,databaseId,headBranch' | 
+# jq --raw-output '[.[] | select(
+#   .workflowName == "Get pip Licenses" and 
+#   .status == "completed" and 
+#   .headBranch == "${{ env.PR_BRANCH }}"
+# )][0].databaseId'
+
+
 # echo "run_id ${run_id}"
 # gh run download "${run_id}" --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
 # cat "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
