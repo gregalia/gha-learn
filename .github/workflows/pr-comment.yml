@@ -18,20 +18,23 @@ jobs:
           pr_url="$(
             jq --raw-output '.issue.pull_request.url' "${GITHUB_EVENT_PATH}"
           )"
+          echo "${pr_url}"
           pr_branch="$(
             gh api "${pr_url}" --jq '.head.ref'
           )"
-          run_id="$(
-            gh run list \
-              --branch "${pr_branch}" \
-              --workflow pip-licenses.yml \
-              --status success \
-              --json databaseId \
-              --jq '.[0].databaseId'
-          )"
-          echo -e "run_id: ${run_id}\ncurrent_branch: ${pr_branch}"
-          gh run download "${run_id}" --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
-          cat "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
+          echo "${pr_branch}"
+
+# run_id="$(
+#   gh run list \
+#     --branch "${pr_branch}" \
+#     --workflow pip-licenses.yml \
+#     --status success \
+#     --json databaseId \
+#     --jq '.[0].databaseId'
+# )"
+# echo -e "run_id: ${run_id}\ncurrent_branch: ${pr_branch}"
+# gh run download "${run_id}" --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
+# cat "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
 
 
 # current_branch="$(git branch --show-current)"
