@@ -13,7 +13,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.event.issue.pull_request && contains(github.event.comment.body, 'magic string')
+    if: github.event.issue.pull_request && github.event.comment.body == '/run'
     steps:
       - name: Get PR Branch
         run: |
@@ -31,7 +31,6 @@ jobs:
         run: 
           run_id="$(
             gh run list \
-              --branch "${{ env.PR_BRANCH }}" \
               --workflow "${{ env.WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM }}" \
               --status success \
               --json databaseId \
@@ -43,6 +42,7 @@ jobs:
 
 
 # current_branch="$(git branch --show-current)"
+# --branch "${{ env.PR_BRANCH }}" \
  
 
 
