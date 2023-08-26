@@ -28,11 +28,20 @@ jobs:
         with:
           ref: ${{ env.PR_BRANCH }}
       - name: Download Run ID Artifact
-        run: 
-          gh --version
-          gh run list --branch "${{ env.PR_BRANCH }}" --workflow "${{ env.WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM }}" --status success --json databaseId --q '.[0].databaseId'
+        run: |
+          run_id="$(
+            gh run list \
+              --branch "${{ env.PR_BRANCH }}" \
+              --workflow "${{ env.WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM }}" \
+              --status success \
+              --json databaseId \
+              --jq '.[0].databaseId'
+          )"
+          echo "run_id ${run_id}"
+          gh run download "${run_id}" --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
+          cat "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
 
-# run_id="$(
+
 # gh run list \
 # --json 'status,workflowName,databaseId,headBranch' | 
 # jq --raw-output '[.[] | select(
@@ -42,9 +51,7 @@ jobs:
 # )][0].databaseId'
 
 
-# echo "run_id ${run_id}"
-# gh run download "${run_id}" --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
-# cat "${run_id}-BUILD_DEPENDENCY_LICENSES.md"
+
 
 
 # current_branch="$(git branch --show-current)"
