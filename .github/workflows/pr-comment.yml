@@ -31,7 +31,7 @@ jobs:
         run: 
           run_id="$(
             gh run list \
-              --branch "${PR_BRANCH}" \
+              --branch "${{ env.PR_BRANCH }}" \
               --workflow "${{ env.WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM }}" \
               --status success \
               --json databaseId \
