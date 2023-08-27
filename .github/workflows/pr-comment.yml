@@ -22,8 +22,15 @@ jobs:
           pr_url="$(
             jq --raw-output '.issue.pull_request.url' "${GITHUB_EVENT_PATH}"
           )"
-          gh api "${pr_url}" --jq '.head | .ref,.sha' |
-            read -rd '' PR_HEAD_REF PR_HEAD_SHA
+          gh_pr_head_data="$(
+            gh api "${pr_url}" --jq '.head'
+          )"
+          PR_HEAD_REF="$(
+            jq '.ref' <<<"${gh_pr_head_data}"
+          )"
+          PR_HEAD_SHA="$(
+            jq '.sha' <<<"${gh_pr_head_data}"
+          )"
           echo "${PR_HEAD_REF}"
           echo "${PR_HEAD_SHA}"
       #     echo "PR_HEAD_REF=${PR_HEAD_REF}" >>"${GITHUB_ENV}"
