@@ -38,11 +38,11 @@ jobs:
               --json databaseId \
               --jq '.[0].databaseId'
           )"
-          echo "run_id ${run_id}"
           gh run download "${run_id}" \
             --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md" \
             --dir gh_download
-          cat gh_download/${run_id}-BUILD_DEPENDENCY_LICENSES.md
+          ls -lR
+# cat gh_download/${run_id}-BUILD_DEPENDENCY_LICENSES.md
 
 
 # gh run list \
