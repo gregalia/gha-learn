@@ -26,45 +26,43 @@ jobs:
             gh api "${pr_url}" --jq '.head'
           )"
           PR_HEAD_REF="$(
-            jq '.ref' <<<"${gh_pr_head_data}"
+            jq --raw-output '.ref' <<<"${gh_pr_head_data}"
           )"
           PR_HEAD_SHA="$(
-            jq '.sha' <<<"${gh_pr_head_data}"
+            jq --raw-output '.sha' <<<"${gh_pr_head_data}"
           )"
-          echo "${PR_HEAD_REF}"
-          echo "${PR_HEAD_SHA}"
-      #     echo "PR_HEAD_REF=${PR_HEAD_REF}" >>"${GITHUB_ENV}"
-      #     echo "PR_HEAD_SHA=${PR_HEAD_SHA}" >>"${GITHUB_ENV}"
-      # - name: Set Commit Status to Pending
-      #   uses: myrotvorets/set-commit-status-action@master
-      #   with:
-      #     sha: ${{ env.PR_HEAD_SHA }}
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     status: pending
-      #     context: Context
-      # - name: Checkout
-      #   uses: actions/checkout@v3
-      #   with:
-      #     ref: ${{ env.PR_HEAD_SHA }}
-      # - name: Download Run ID Artifact
-      #   run: |
-      #     run_id="$(
-      #       gh run list \
-      #         --branch "${{ env.PR_HEAD_REF }}" \
-      #         --workflow "${{ env.WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM }}" \
-      #         --status success \
-      #         --json databaseId \
-      #         --jq '.[0].databaseId'
-      #     )"
-      #     gh run download "${run_id}" \
-      #       --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md" \
-      #       --dir gh_download
-      #     cat gh_download/BUILD_DEPENDENCY_LICENSES.md
-      # - name: Set Final Commit Status
-      #   uses: myrotvorets/set-commit-status-action@master
-      #   if: always()
-      #   with:
-      #     sha: ${{ env.PR_HEAD_SHA }}
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     status: ${{ job.status }}
-      #     context: Context
+          echo "PR_HEAD_REF=${PR_HEAD_REF}" >>"${GITHUB_ENV}"
+          echo "PR_HEAD_SHA=${PR_HEAD_SHA}" >>"${GITHUB_ENV}"
+      - name: Set Commit Status to Pending
+        uses: myrotvorets/set-commit-status-action@master
+        with:
+          sha: ${{ env.PR_HEAD_SHA }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: pending
+          context: Context
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.PR_HEAD_SHA }}
+      - name: Download Run ID Artifact
+        run: |
+          run_id="$(
+            gh run list \
+              --branch "${{ env.PR_HEAD_REF }}" \
+              --workflow "${{ env.WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM }}" \
+              --status success \
+              --json databaseId \
+              --jq '.[0].databaseId'
+          )"
+          gh run download "${run_id}" \
+            --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md" \
+            --dir gh_download
+          cat gh_download/BUILD_DEPENDENCY_LICENSES.md
+      - name: Set Final Commit Status
+        uses: myrotvorets/set-commit-status-action@master
+        if: always()
+        with:
+          sha: ${{ env.PR_HEAD_SHA }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          context: Context
