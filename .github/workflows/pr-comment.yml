@@ -20,18 +20,12 @@ jobs:
       - name: Export PR Info
         run: |
           pr_url="$(jq --raw-output '.issue.pull_request.url' "${GITHUB_EVENT_PATH}")"
-          gh_pr_data="$(gh api "${pr_url}" --header "X-GitHub-Api-Version: 2022-11-28")"
-          PR_HEAD_REF="$(jq --raw-output '.head.ref' <<<"${gh_pr_data}")"
-          PR_HEAD_SHA="$(jq --raw-output '.head.sha' <<<"${gh_pr_data}")"
-          PR_NUMBER="$(jq --raw-output '.number' <<<"${gh_pr_data}")"
-          REPO_FULL_NAME="$(jq --raw-output '.head.repo.full_name' <<<"${gh_pr_data}")"
-          
-          echo <<HEREDOC >>"${GITHUB_ENV}"
-          PR_HEAD_REF=${PR_HEAD_REF}
-          PR_HEAD_SHA=${PR_HEAD_SHA}
-          PR_NUMBER=${PR_NUMBER}
-          REPO_FULL_NAME=${REPO_FULL_NAME}
-          HEREDOC
+          pr_data="$(gh api "${pr_url}" --header "X-GitHub-Api-Version: 2022-11-28")"
+          echo "PR_HEAD_REF=$(jq --raw-output '.head.ref' <<<"${pr_data}")" \
+          PR_HEAD_SHA=$(jq --raw-output '.head.sha' <<<"${pr_data}")
+          PR_NUMBER=$(jq --raw-output '.number' <<<"${pr_data}")
+          REPO_FULL_NAME=$(jq --raw-output '.head.repo.full_name' <<<"${pr_data}")" \
+            >>"${GITHUB_ENV}"
       - name: Set Initial Commit Status
         if: always()
         run: |
