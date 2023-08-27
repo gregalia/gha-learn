@@ -22,24 +22,28 @@ jobs:
           pr_url="$(
             jq --raw-output '.issue.pull_request.url' "${GITHUB_EVENT_PATH}"
           )"
-          gh_pr_head_data="$(
-            gh api "${pr_url}" --jq '.head'
+          gh_pr_data="$(
+            gh api "${pr_url}"
           )"
           PR_HEAD_REF="$(
-            jq --raw-output '.ref' <<<"${gh_pr_head_data}"
+            jq --raw-output '.head.ref' <<<"${gh_pr_data}"
           )"
           PR_HEAD_SHA="$(
-            jq --raw-output '.sha' <<<"${gh_pr_head_data}"
+            jq --raw-output '.head.sha' <<<"${gh_pr_data}"
+          )"
+          PR_NUMBER="$(
+            jq --raw-output '.number' <<<"${gh_pr_data}"
           )"
           echo "PR_HEAD_REF=${PR_HEAD_REF}" >>"${GITHUB_ENV}"
           echo "PR_HEAD_SHA=${PR_HEAD_SHA}" >>"${GITHUB_ENV}"
+          echo "PR_NUMBER=${PR_NUMBER}" >>"${GITHUB_ENV}"
       - name: Set Commit Status to Pending
         uses: myrotvorets/set-commit-status-action@master
         with:
           sha: ${{ env.PR_HEAD_SHA }}
           token: ${{ secrets.GITHUB_TOKEN }}
           status: pending
-          context: Context
+          context: Download Pip Licenses
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -58,6 +62,7 @@ jobs:
             --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md" \
             --dir gh_download
           cat gh_download/BUILD_DEPENDENCY_LICENSES.md
+          gh pr comment "${PR_NUMBER}" --body "Hi from GitHub CLI"
       - name: Set Final Commit Status
         uses: myrotvorets/set-commit-status-action@master
         if: always()
@@ -65,4 +70,5 @@ jobs:
           sha: ${{ env.PR_HEAD_SHA }}
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
-          context: Context
+          context: Download Pip Licenses
+
