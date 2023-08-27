@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.issue.pull_request && github.event.comment.body == '/run'
     steps:
-      - name: Get PR Info
+      - name: Export PR Info
         run: |
           pr_url="$(
             jq --raw-output '.issue.pull_request.url' "${GITHUB_EVENT_PATH}"
@@ -41,13 +41,14 @@ jobs:
           echo "PR_HEAD_SHA=${PR_HEAD_SHA}" >>"${GITHUB_ENV}"
           echo "PR_NUMBER=${PR_NUMBER}" >>"${GITHUB_ENV}"
           echo "REPO_FULL_NAME=${REPO_FULL_NAME}" >>"${GITHUB_ENV}"
-      - name: Set Commit Status to Pending
-        uses: myrotvorets/set-commit-status-action@master
-        with:
-          sha: ${{ env.PR_HEAD_SHA }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          status: pending
-          context: Download Pip Licenses
+      - name: Set Initial Commit Status
+        if: always()
+        run: |
+          gh api \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            --raw-field "state=pending" \
+            --raw-field "context=Download Pip Licenses" \
+            "/repos/${{ env.REPO_FULL_NAME }}/statuses/${{ env.PR_HEAD_SHA }}"
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -68,7 +69,7 @@ jobs:
       - name: Do Something With the Artifact
         run: |
           cat gh_download/BUILD_DEPENDENCY_LICENSES.md
-      - name: Comment PR
+      - name: Comment the PR
         run: |
           gh pr comment "${{ env.PR_NUMBER }}" --body "Hi from GitHub CLI"
       - name: Set Final Commit Status
@@ -80,20 +81,3 @@ jobs:
             --raw-field "state=${{ job.status }}" \
             --raw-field "context=Download Pip Licenses" \
             "/repos/${{ env.REPO_FULL_NAME }}/statuses/${{ env.PR_HEAD_SHA }}"
-
-
-      # - name: Set Final Commit Status
-      #   uses: myrotvorets/set-commit-status-action@master
-      #   if: always()
-      #   with:
-      #     sha: ${{ env.PR_HEAD_SHA }}
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     status: ${{ job.status }}
-      #     context: Download Pip Licenses
-        # Thinking about getting to that status change myself
-      # - uses: actions/github-script@v6
-      #   with:
-      #     result-encoding: string
-      #     script: |
-      #       console.log(JSON.stringify(github.rest.repos))
-       
