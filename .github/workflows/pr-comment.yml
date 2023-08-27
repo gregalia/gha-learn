@@ -41,8 +41,7 @@ jobs:
           gh run download "${run_id}" \
             --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md" \
             --dir gh_download
-          ls -lR
-# cat gh_download/${run_id}-BUILD_DEPENDENCY_LICENSES.md
+          cat gh_download/BUILD_DEPENDENCY_LICENSES.md
 
 
 # gh run list \
