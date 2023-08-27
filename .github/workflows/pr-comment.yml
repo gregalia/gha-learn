@@ -71,4 +71,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
           context: Download Pip Licenses
-
+      - uses: actions/github-script@v6
+        with:
+          result-encoding: string
+          script: |
+            console.log(JSON.stringify(github.rest))
