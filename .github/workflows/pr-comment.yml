@@ -21,11 +21,12 @@ jobs:
         run: |
           pr_url="$(jq --raw-output '.issue.pull_request.url' "${GITHUB_EVENT_PATH}")"
           pr_data="$(gh api "${pr_url}" --header "X-GitHub-Api-Version: 2022-11-28")"
-          echo "PR_HEAD_REF=$(jq --raw-output '.head.ref' <<<"${pr_data}")" \
-          PR_HEAD_SHA=$(jq --raw-output '.head.sha' <<<"${pr_data}")
-          PR_NUMBER=$(jq --raw-output '.number' <<<"${pr_data}")
-          REPO_FULL_NAME=$(jq --raw-output '.head.repo.full_name' <<<"${pr_data}")" \
-            >>"${GITHUB_ENV}"
+          {
+            echo "PR_HEAD_REF=$(jq --raw-output '.head.ref' <<<"${pr_data}")"
+            echo "PR_HEAD_SHA=$(jq --raw-output '.head.sha' <<<"${pr_data}")"
+            echo "PR_NUMBER=$(jq --raw-output '.number' <<<"${pr_data}")"
+            echo "REPO_FULL_NAME=$(jq --raw-output '.head.repo.full_name' <<<"${pr_data}")"
+          } >>"${GITHUB_ENV}"
       - name: Set Initial Commit Status
         if: always()
         run: |
