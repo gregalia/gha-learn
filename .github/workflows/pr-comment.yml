@@ -21,18 +21,25 @@ jobs:
           pr_url="$(
             jq --raw-output '.issue.pull_request.url' "${GITHUB_EVENT_PATH}"
           )"
-          echo "PR_BRANCH=$(
-            gh api "${pr_url}" --jq '.head.ref'
+          echo "PR_HEAD_SHA=$(
+            gh api "${pr_url}" --jq '.head.sha'
           )" >>"${GITHUB_ENV}"
+      - name: Set Commit Status to Pending
+        uses: myrotvorets/set-commit-status-action@master
+        with:
+          sha: ${{ env.PR_HEAD_SHA }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: pending
+          context: Context
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: ${{ env.PR_BRANCH }}
+          ref: ${{ env.PR_HEAD_SHA }}
       - name: Download Run ID Artifact
         run: |
           run_id="$(
             gh run list \
-              --branch "${{ env.PR_BRANCH }}" \
+              --branch "${{ env.PR_HEAD_SHA }}" \
               --workflow "${{ env.WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM }}" \
               --status success \
               --json databaseId \
@@ -42,3 +49,11 @@ jobs:
             --name "${run_id}-BUILD_DEPENDENCY_LICENSES.md" \
             --dir gh_download
           cat gh_download/BUILD_DEPENDENCY_LICENSES.md
+      - name: Set Final Commit Status
+        uses: myrotvorets/set-commit-status-action@master
+        if: always()
+        with:
+          sha: ${{ env.PR_HEAD_SHA }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          context: Context
