@@ -72,7 +72,7 @@ jobs:
             --header "Accept: application/vnd.github+json" \
             --header "X-GitHub-Api-Version: 2022-11-28" \
             --raw-field "state=${{ job.status }}" \
-            --raw-field "context='Download Pip Licenses' \
+            --raw-field "context=Download Pip Licenses" \
             "/repos/${{ env.REPO_FULL_NAME }}/statuses/${{ env.PR_HEAD_SHA }}"
 
 
