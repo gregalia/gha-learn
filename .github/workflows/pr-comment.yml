@@ -22,10 +22,10 @@ jobs:
           pr_url="$(
             jq --raw-output '.issue.pull_request.url' "${GITHUB_EVENT_PATH}"
           )"
-            gh api "${pr_url}" --jq '.head | .ref,.sha'
-      #         read -rd '' PR_HEAD_REF PR_HEAD_SHA
-      #     echo "${PR_HEAD_SHA}"
-      #     echo "${PR_HEAD_REF}"
+          gh api "${pr_url}" --jq '.head | .ref,.sha' |
+            read -rd '' PR_HEAD_REF PR_HEAD_SHA
+          echo "${PR_HEAD_REF}"
+          echo "${PR_HEAD_SHA}"
       #     echo "PR_HEAD_REF=${PR_HEAD_REF}" >>"${GITHUB_ENV}"
       #     echo "PR_HEAD_SHA=${PR_HEAD_SHA}" >>"${GITHUB_ENV}"
       # - name: Set Commit Status to Pending
