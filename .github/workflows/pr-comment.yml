@@ -8,6 +8,7 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
+  statuses: write
 env:
   GH_TOKEN: ${{ github.token }}
   WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM: pip-licenses.yml
