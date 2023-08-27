@@ -35,7 +35,7 @@ jobs:
             jq --raw-output '.number' <<<"${gh_pr_data}"
           )"
           REPO_FULL_NAME="$(
-            jq --raw-output 'head.repo.full_name' <<<"${gh_pr_data}"
+            jq --raw-output '.head.repo.full_name' <<<"${gh_pr_data}"
           )"
           echo "PR_HEAD_REF=${PR_HEAD_REF}" >>"${GITHUB_ENV}"
           echo "PR_HEAD_SHA=${PR_HEAD_SHA}" >>"${GITHUB_ENV}"
