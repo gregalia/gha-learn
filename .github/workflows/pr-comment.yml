@@ -22,9 +22,11 @@ jobs:
           pr_url="$(
             jq --raw-output '.issue.pull_request.url' "${GITHUB_EVENT_PATH}"
           )"
-          echo "PR_HEAD_SHA=$(
-            gh api "${pr_url}" --jq '.head.sha'
-          )" >>"${GITHUB_ENV}"
+            gh api "${pr_url}" --jq '.head | .ref,.sha' |
+              read -rd '' PR_HEAD_BRANCH PR_HEAD_SHA
+          env_vars="PR_HEAD_BRANCH=${PR_HEAD_BRANCH}\n"
+          env_vars+="PR_HEAD_SHA=${PR_HEAD_SHA}\n"
+          echo -en "${env_vars}" >>"${GITHUB_ENV}"
       - name: Set Commit Status to Pending
         uses: myrotvorets/set-commit-status-action@master
         with:
@@ -40,7 +42,7 @@ jobs:
         run: |
           run_id="$(
             gh run list \
-              --branch "${{ env.PR_HEAD_SHA }}" \
+              --branch "${{ env.PR_HEAD_BRANCH }}" \
               --workflow "${{ env.WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM }}" \
               --status success \
               --json databaseId \
