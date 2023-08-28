@@ -31,7 +31,6 @@ jobs:
             --header "X-GitHub-Api-Version: 2022-11-28" \
             --raw-field "state=pending" \
             --raw-field "context=Upload Workflows" \
-            --raw-field "target_url=https://example.com/build/status"
             {
               echo "## github.action: ${{ github.action }}"
               echo "## github.actor_id: ${{ github.actor_id }}"
@@ -40,7 +39,15 @@ jobs:
               echo "## github.run_id: ${{ github.run_id }}"
               echo "### target URL: https://github.com/gregalia/gha-learn/actions/runs/5361436299/job/14516701921?pr=16"
             } >>$GITHUB_STEP_SUMMARY
-            
+
+# github.action: __run_2
+# github.actor_id: 13774377
+# github.job: deploy
+# github.repository_id: 654075819
+# github.run_id: 6004674212
+# target URL: https://github.com/gregalia/gha-learn/actions/runs/5361436299/job/14516701921?pr=16
+# https://github.com/gregalia/gha-learn/actions/runs/github.run_id
+
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -56,4 +63,6 @@ jobs:
             --header "Accept: application/vnd.github+json" \
             --header "X-GitHub-Api-Version: 2022-11-28" \
             --raw-field "state=${{ job.status }}" \
-            --raw-field "context=Upload Workflows"
+            --raw-field "context=Upload Workflows" \
+            --raw-field "target_url=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --raw-field "description=some description"
