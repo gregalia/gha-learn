@@ -59,6 +59,13 @@ jobs:
         run: |
           gh pr comment "${{ env.PR_NUMBER }}" \
             --body "Hi from GitHub CLI"
+      - name: test heredoc to github env
+        run: |
+          cat <<HEREDOC >>"${GITHUB_ENV}"
+          a=b
+          b=c
+          c=d
+          HEREDOC
       - name: Set Final Commit Status
         if: always()
         run: |
