@@ -66,6 +66,7 @@ jobs:
           b=c
           c=d
           HEREDOC
+          printenv
       - name: Set Final Commit Status
         if: always()
         run: |
