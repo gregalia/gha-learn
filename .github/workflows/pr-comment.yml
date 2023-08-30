@@ -34,31 +34,32 @@ jobs:
             --header "X-GitHub-Api-Version: 2022-11-28" \
             --raw-field "state=pending" \
             --raw-field "context=Download Pip Licenses" \
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ env.PR_HEAD_SHA }}
-      - name: Download Run ID Artifact
-        run: |
-          other_workflow_run_id="$(
-            gh run list \
-              --branch "${{ env.PR_HEAD_REF }}" \
-              --workflow "${{ env.WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM }}" \
-              --status success \
-              --json databaseId \
-              --jq '.[0].databaseId'
-          )"
-          gh run download "${other_workflow_run_id}" \
-            --name "${other_workflow_run_id}-BUILD_DEPENDENCY_LICENSES.md" \
-            --dir gh_download
-      # Note that the filename is the original filename, not the artifact name
-      - name: Do Something With the Artifact
-        run: |
-          cat gh_download/BUILD_DEPENDENCY_LICENSES.md
-      - name: Comment the PR
-        run: |
-          gh pr comment "${{ env.PR_NUMBER }}" \
-            --body "Hi from GitHub CLI"
+            --raw-field "target_url=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      # - name: Checkout
+      #   uses: actions/checkout@v3
+      #   with:
+      #     ref: ${{ env.PR_HEAD_SHA }}
+      # - name: Download Run ID Artifact
+      #   run: |
+      #     other_workflow_run_id="$(
+      #       gh run list \
+      #         --branch "${{ env.PR_HEAD_REF }}" \
+      #         --workflow "${{ env.WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM }}" \
+      #         --status success \
+      #         --json databaseId \
+      #         --jq '.[0].databaseId'
+      #     )"
+      #     gh run download "${other_workflow_run_id}" \
+      #       --name "${other_workflow_run_id}-BUILD_DEPENDENCY_LICENSES.md" \
+      #       --dir gh_download
+      # # Note that the filename is the original filename, not the artifact name
+      # - name: Do Something With the Artifact
+      #   run: |
+      #     cat gh_download/BUILD_DEPENDENCY_LICENSES.md
+      # - name: Comment the PR
+      #   run: |
+      #     gh pr comment "${{ env.PR_NUMBER }}" \
+      #       --body "Hi from GitHub CLI"
       - name: test heredoc to github env
         run: |
           cat <<HEREDOC >>"${GITHUB_ENV}"
@@ -74,4 +75,5 @@ jobs:
             --header "Accept: application/vnd.github+json" \
             --header "X-GitHub-Api-Version: 2022-11-28" \
             --raw-field "state=${{ job.status }}" \
-            --raw-field "context=Download Pip Licenses"
+            --raw-field "context=Download Pip Licenses" \
+            --raw-field "target_url=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
