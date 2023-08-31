@@ -1,0 +1,63 @@
+name: Run on Comment
+on:
+  issue_comment:
+    types: 
+      - created
+      - edited
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  statuses: write
+env:
+  GH_TOKEN: ${{ github.token }}
+  WORKFLOW_TO_DOWNLOAD_ARTIFACT_FROM: pip-licenses.yml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event.issue.pull_request && github.event.comment.body == '/upload'
+    steps:
+      - name: Export PR Info
+        run: |
+          pr_url="$(jq --raw-output '.issue.pull_request.url' "${GITHUB_EVENT_PATH}")"
+          pr_data="$(gh api "${pr_url}" --header "X-GitHub-Api-Version: 2022-11-28")"
+          {
+            echo "PR_HEAD_SHA=$(jq --raw-output '.head.sha' <<<"${pr_data}")"
+          } >>"${GITHUB_ENV}"
+      - name: Set Initial Commit Status
+        if: always()
+        run: |
+          gh api "/repos/${{ github.repository }}/statuses/${{ env.PR_HEAD_SHA }}" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            --raw-field "state=pending" \
+            --raw-field "context=Upload Workflows" \
+            --raw-field "description=details:" \
+            --raw-field "target_url=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+# github.action: __run_2
+# github.actor_id: 13774377
+# github.job: deploy
+# github.repository_id: 654075819
+# github.run_id: 6004674212
+# target URL: https://github.com/gregalia/gha-learn/actions/runs/5361436299/job/14516701921?pr=16
+# https://github.com/gregalia/gha-learn/actions/runs/github.run_id
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.PR_HEAD_SHA }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: workflows
+          path: .github/workflows
+      - name: Set Final Commit Status
+        if: always()
+        run: |
+          gh api "/repos/${{ github.repository }}/statuses/${{ env.PR_HEAD_SHA }}" \
+            --header "Accept: application/vnd.github+json" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            --raw-field "state=${{ job.status }}" \
+            --raw-field "context=Upload Workflows" \
+            --raw-field "target_url=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --raw-field "description=details:"
+
