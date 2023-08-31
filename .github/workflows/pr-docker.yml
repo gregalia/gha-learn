@@ -1,4 +1,4 @@
-name: 'PR Created/Updated: Code Checks, Build, and Test'
+name: 'PR Created/Updated: Docker'
 run-name: ${{ github.event_name }} | @${{ github.actor }} | ${{ github.head_ref }}
 on:
   - pull_request
@@ -23,5 +23,6 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          outputs: type=image
       - name: Get Images
         run: docker images
