@@ -23,6 +23,6 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          outputs: type=image
+          load: true
       - name: Get Images
         run: docker images
