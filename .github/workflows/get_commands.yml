@@ -7,6 +7,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get Commands
-        run: compgen -c
-      - name: Get Aliases
-        run: compgen -a
+        run: compgen -c | sort
