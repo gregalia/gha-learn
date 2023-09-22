@@ -1,5 +1,5 @@
-name: Get Commands: Name
-run-name: Get Commands: Run Name
+name: 'Get Commands: Name'
+run-name: 'Get Commands: Run Name'
 on: pull_request
 # permissions: read-all
 jobs:
