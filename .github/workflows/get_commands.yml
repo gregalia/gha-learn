@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get Commands
-        run: compgen -c | sort > tee command_list
+        run: compgen -c | sort | tee command_list
       - uses: actions/upload-artifact@v3
         with:
           name: command_list
