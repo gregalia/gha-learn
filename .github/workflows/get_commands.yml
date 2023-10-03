@@ -1,0 +1,14 @@
+name: 'Get Commands: Name'
+run-name: 'Get Commands: Run Name'
+on: pull_request
+# permissions: read-all
+jobs:
+  get-commands:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Commands
+        run: compgen -c | sort -u | tee command_list
+      - uses: actions/upload-artifact@v3
+        with:
+          name: command_list
+          path: command_list
