@@ -12,7 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub Object JSON
-        run: echo '${{ toJson(github) }}' >>github_context.json
+        run: |
+          echo '${{ toJson(github) }}' | jq '.token = "****"' >github_context.json
       - name: Upload GitHub Object JSON
         uses: actions/upload-artifact@v3
         with:
