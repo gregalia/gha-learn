@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Dump GitHub Object JSON
         run: |
-          echo '${{ toJson(github) }}' | jq '.token = "****"' >github_${{ github.event_name }}_context.json
+          jq '.token = "****"' <<<${{ toJson(github) }} >github_${{ github.event_name }}_context.json
       - name: Upload GitHub Object JSON
         uses: actions/upload-artifact@v3
         with:
