@@ -1,4 +1,5 @@
 name: GitHub Object Grabber
+run-name: GitHub Object Grabber
 on: pull_request
 permissions:
   contents: read
@@ -11,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub Object JSON
-        run: echo "${{ toJson(github) }}" >>github_context.json
+        run: echo '${{ toJson(github) }}' >>github_context.json
       - name: Upload GitHub Object JSON
         uses: actions/upload-artifact@v3
         with:

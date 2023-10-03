@@ -1,4 +1,5 @@
 name: Run on Comment
+run-name: Run on Comment
 on:
   issue_comment:
     types: 
