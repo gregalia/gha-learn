@@ -1,0 +1,19 @@
+name: GitHub Object Grabber
+on: pull_request
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+env:
+  GH_TOKEN: ${{ github.token }}
+jobs:
+  grab:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub Object JSON
+        run: echo "${{ toJson(github) }}" >>github_context.json
+      - name: Upload GitHub Object JSON
+        uses: actions/upload-artifact@v3
+        with:
+          name: github_context.json
+          path: github_context.json
