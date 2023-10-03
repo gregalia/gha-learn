@@ -1,6 +1,9 @@
 name: GitHub Object Grabber
-run-name: GitHub Object Grabber
-on: pull_request
+run-name: 'GitHub Object Grabber: ${{ github.event_name }}'
+on: 
+  - pull_request
+  - push
+  - release
 permissions:
   contents: read
   issues: write
