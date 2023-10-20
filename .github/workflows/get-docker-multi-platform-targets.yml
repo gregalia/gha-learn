@@ -1,5 +1,5 @@
 name: Docker multi-platform
-run-name: 
+run-name: Docker multi-platform
 on: pull_request
 permissions:
   contents: read
