@@ -1,0 +1,11 @@
+on:
+  - workflow_call
+env:
+  dockerfile: build_setup/Dockerfile
+  DOCKER_BUILDKIT: 1
+jobs:
+  docker_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
