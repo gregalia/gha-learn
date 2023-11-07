@@ -10,7 +10,6 @@ jobs:
       - name: Docker Build
         run: |
           docker build \
-            --ssh default=${SSH_AUTH_SOCK} \
             --target test \
             --file ${{ env.dockerfile }} \
             --tag local_build:latest \
