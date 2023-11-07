@@ -4,4 +4,7 @@ jobs:
   docker_build:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/workflows/docker_build.yml
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Docker Build
+        uses: ./.github/workflows/docker_build.yml
