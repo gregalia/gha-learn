@@ -9,11 +9,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set Env
+        run: |
+          cat <<HEREDOC >>${{ github.env }}
+          PYTHON_VERSION=$(cat .github/PYTHON_VERSION)
+          HEREDOC
       - name: Docker Build
         run: |
           docker build \
             --target test \
             --file ${{ env.dockerfile }} \
             --tag local_build:latest \
-            --build-arg PYTHON_VERSION="$(cat ./github/PYTHON_VERSION)" \
+            --build-arg PYTHON_VERSION \
             .
