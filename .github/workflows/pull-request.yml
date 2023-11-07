@@ -1,7 +1,5 @@
 on:
   - pull_request
 jobs:
-  checkout:
-    uses: ./.github/workflows/checkout.yml
   docker_build:
     uses: ./.github/workflows/docker_build.yml
