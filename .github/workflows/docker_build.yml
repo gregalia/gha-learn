@@ -1,0 +1,20 @@
+on:
+  - workflow_dispatch
+env:
+  dockerfile: build_setup/Dockerfile
+  DOCKER_BUILDKIT: 1
+jobs:
+  docker_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Docker Build
+        run: |
+          docker build \
+            --ssh default=${SSH_AUTH_SOCK} \
+            --target test \
+            --file ${{ env.dockerfile }} \
+            --tag local_build:latest \
+            --build-arg PYTHON_VERSION="$(cat ./github/PYTHON_VERSION)" \
+            .

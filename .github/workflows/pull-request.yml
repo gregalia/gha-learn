@@ -1,0 +1,7 @@
+on:
+  - pull_request
+jobs:
+  docker_build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/workflows/docker_build.yml
