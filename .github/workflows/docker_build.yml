@@ -27,7 +27,7 @@ jobs:
           mkdir -p artifacts
           docker run --rm \
             --mount "type=bind,src=./artifacts,dst=/artifacts" \
-            lambda-image:latest \
+            local_build:latest \
             cp -r artifacts/. /artifacts
       - name: Checksum Artifacts
         run: |
