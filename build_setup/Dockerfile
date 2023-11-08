@@ -6,7 +6,6 @@ WORKDIR /app
 
 COPY src/ src/
 
-
 RUN python src/main.py && \
-  tar -czf random_bytes.tar.gz random_bytes.json
-# tar --compress --create --file random_bytes.tar.gz random_bytes.json
+  mkdir -p artifacts && \
+  tar -czf artifacts/random_bytes.tgz random_bytes.json
