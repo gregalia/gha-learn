@@ -1,0 +1,20 @@
+name: Docker multi-platform
+run-name: Docker multi-platform
+on: pull_request
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  statuses: write
+env:
+  GH_TOKEN: ${{ github.token }}
+jobs:
+  grab:
+    runs-on: ubuntu-latest
+    steps:
+      - name: buildx ls 1
+        run: docker buildx ls
+      - name: buildx create
+        run: docker buildx create --driver=docker-container --name=container
+      - name: buildx ls 2
+        run: docker buildx ls

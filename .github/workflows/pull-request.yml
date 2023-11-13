@@ -1,0 +1,5 @@
+on:
+  - pull_request
+jobs:
+  docker_build:
+    uses: ./.github/workflows/docker_build.yml
