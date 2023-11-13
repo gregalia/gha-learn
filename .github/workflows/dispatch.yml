@@ -1,0 +1,20 @@
+on:
+  workflow_dispatch:
+    inputs:
+      SOMETHING:
+        required: true
+        type: string
+jobs:
+  grab:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub Object JSON
+        run: |
+          cat <<HEREDOC >github_${{ github.event_name }}_context.json
+          ${{ toJson(github) }}
+          HEREDOC
+      - name: Upload GitHub Object JSON
+        uses: actions/upload-artifact@v3
+        with:
+          name: github_${{ github.event_name }}_context.json
+          path: github_${{ github.event_name }}_context.json
