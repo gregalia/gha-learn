@@ -1,0 +1,57 @@
+---
+name: Build Upload Image
+run-name: 'Build Upload Image: @${{github.actor}}, ${{ github.head_ref || github.ref_name}}'
+on:
+  push:
+    tags:
+      - v*
+  pull_request:
+jobs:
+  build-save:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      IMAGE_NAME: ${{github.event.repository.name}}:latest
+      ARTIFACT_NAME: ${{github.event.repository.name}}-latest.docker
+      DOCKERFILE_PATH: build_setup/Dockerfile
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Create Container Driver Builder
+        run: |
+          docker buildx create \
+            --name container \
+            --driver=docker-container
+      - name: Build Runtime Image
+        run: |
+          docker build \
+            --builder=container \
+            --target test \
+            --tag ${{env.IMAGE_NAME}} \
+            --file "${{env.DOCKERFILE_PATH}}" \
+            --output type=docker,dest=${{env.ARTIFACT_NAME}} \
+            .
+      - name: Generate Artifact Checksum
+        run: |
+          sha256sum ${{env.ARTIFACT_NAME}} >checksum
+      - name: Upload Checksum to Workflow Run
+        if: github.ref_type != 'tag'
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
+        with:
+          name: checksum
+          path: checksum
+      - name: Upload Artifact to Workflow Run
+        if: github.ref_type != 'tag'
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
+        with:
+          name: ${{env.ARTIFACT_NAME}}
+          path: ${{env.ARTIFACT_NAME}}
+      - name: Upload Artifact and Checksum to Release
+        if: github.ref_type == 'tag'
+        env:
+          GITHUB_TOKEN: ${{github.token}}
+        run: |
+          gh release upload ${{github.ref_name}} \
+            ${{env.ARTIFACT_NAME}} checksum \
+            --clobber
