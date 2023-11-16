@@ -1,26 +1,29 @@
+---
 name: GitHub Object Grabber
 run-name: 'GitHub Object Grabber: ${{ github.event_name }}'
 on:
   - pull_request
   - push
   - release
+  - workflow_call
+  - workflow_dispatch
 permissions:
   contents: read
-  issues: write
-  pull-requests: write
 env:
   GH_TOKEN: ${{ github.token }}
 jobs:
   grab:
     runs-on: ubuntu-latest
+    env:
+      OBJ_NAME: github-${{github.event_name}}-${{github.ref_type}}-context.json
     steps:
       - name: Dump GitHub Object JSON
         run: |
-          cat <<HEREDOC | sed 's/"ghs_.*"/"***"/g' >github_${{ github.event_name }}_context.json
+          cat <<HEREDOC >${{env.OBJ_NAME}}
           ${{ toJson(github) }}
           HEREDOC
       - name: Upload GitHub Object JSON
         uses: actions/upload-artifact@v3
         with:
-          name: github_${{ github.event_name }}_context.json
-          path: github_${{ github.event_name }}_context.json
+          name: ${{env.OBJ_NAME}}
+          path: ${{env.OBJ_NAME}}
