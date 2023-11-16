@@ -14,20 +14,66 @@ jobs:
   grab:
     runs-on: ubuntu-latest
     env:
-      ENV_FILE_NAME: github-${{github.event_name}}-${{github.ref_type}}.env
-      ALL_VARS_FILE: github-${{github.event_name}}-${{github.ref_type}}.all.env
+      PRE_ENV_FILE_NAME: github-${{github.event_name}}-${{github.ref_type}}.env
+      PRE_ALL_VARS_FILE: github-${{github.event_name}}-${{github.ref_type}}.all.env
+      ENV_DIFF: env.diff
+      POST_ENV_FILE_NAME: github-${{github.event_name}}-${{github.ref_type}}.env
+      POST_ALL_VARS_FILE: github-${{github.event_name}}-${{github.ref_type}}.all.env
+      ALL_VARS_DIFF: all.env.diff
     steps:
-      - name: Dump Runner Environment
+      - name: Dump Runner Environment Pre Crazy Max
+        continue-on-error: true
         run: |
-          printenv >${{env.ENV_FILE_NAME}}
-          set >${{env.ALL_VARS_FILE}}
-      - name: Upload Env
+          printenv | sort >${{env.PRE_ENV_FILE_NAME}}
+          set | sort >${{env.PRE_ALL_VARS_FILE}}
+      - name: Expose GitHub Runtime
+        continue-on-error: true
+        uses: crazy-max/ghaction-github-runtime@v3
+      - name: Dump Runner Environment Post Crazy Max
+        continue-on-error: true
+        run: |
+          printenv | sort >${{env.POST_ENV_FILE_NAME}}
+          set | sort >${{env.POST_ALL_VARS_FILE}}
+      - name: Diff
+        continue-on-error: true
+        run: |
+          diff ${{env.PRE_ENV_FILE_NAME}} ${{env.POST_ENV_FILE_NAME}} |
+            tee ${{env.ENV_DIFF}}
+          diff ${{env.PRE_ALL_VARS_FILE}} ${{env.POST_ALL_VARS_FILE}} |
+            tee ${{env.ALL_VARS_DIFF}}
+      - name: Upload Pre-Env
+        continue-on-error: true
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.ENV_FILE_NAME}}
-          path: ${{env.ENV_FILE_NAME}}
-      - name: Upload All Vars
+          name: ${{env.PRE_ENV_FILE_NAME}}
+          path: ${{env.PRE_ENV_FILE_NAME}}
+      - name: Upload Pre All-Vars
+        continue-on-error: true
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.ALL_VARS_FILE}}
-          path: ${{env.ALL_VARS_FILE}}
+          name: ${{env.PRE_ALL_VARS_FILE}}
+          path: ${{env.PRE_ALL_VARS_FILE}}
+      - name: Upload Post-Env
+        continue-on-error: true
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.POST_ENV_FILE_NAME}}
+          path: ${{env.POST_ENV_FILE_NAME}}
+      - name: Upload Post All-Vars
+        continue-on-error: true
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.POST_ALL_VARS_FILE}}
+          path: ${{env.POST_ALL_VARS_FILE}}
+      - name: Upload Env Diff
+        continue-on-error: true
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.ALL_VARS_DIFF}}
+          path: ${{env.ALL_VARS_DIFF}}
+      - name: Upload Post All-Vars
+        continue-on-error: true
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.ENV_DIFF}}
+          path: ${{env.ENV_DIFF}}
