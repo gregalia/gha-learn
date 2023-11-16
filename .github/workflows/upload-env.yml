@@ -15,11 +15,11 @@ jobs:
   grab:
     runs-on: ubuntu-latest
     env:
-      PRE_ENV_FILE_NAME: github-${{github.event_name}}-${{github.ref_type}}.env
-      PRE_ALL_VARS_FILE: github-${{github.event_name}}-${{github.ref_type}}.all.env
+      PRE_ENV_FILE_NAME: github-${{github.event_name}}-${{github.ref_type}}-pre.env
+      PRE_ALL_VARS_FILE: github-${{github.event_name}}-${{github.ref_type}}-pre.all.env
       ENV_DIFF: env.diff
-      POST_ENV_FILE_NAME: github-${{github.event_name}}-${{github.ref_type}}.env
-      POST_ALL_VARS_FILE: github-${{github.event_name}}-${{github.ref_type}}.all.env
+      POST_ENV_FILE_NAME: github-${{github.event_name}}-${{github.ref_type}}-post.env
+      POST_ALL_VARS_FILE: github-${{github.event_name}}-${{github.ref_type}}-post.all.env
       ALL_VARS_DIFF: all.env.diff
     steps:
       - name: Dump Runner Environment Pre Crazy Max
