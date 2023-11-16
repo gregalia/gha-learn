@@ -1,0 +1,33 @@
+name: GitHub Object Grabber
+run-name: 'GitHub Object Grabber: ${{ github.event_name }}'
+on:
+  - pull_request
+  - push
+  - release
+  - workflow_call
+  - workflow_dispatch
+permissions:
+  contents: read
+env:
+  GH_TOKEN: ${{ github.token }}
+jobs:
+  grab:
+    runs-on: ubuntu-latest
+    env:
+      ENV_FILE_NAME: github-${{github.event_name}}-${{github.ref_type}}.env
+      ALL_VARS_FILE: github-${{github.event_name}}-${{github.ref_type}}.all.env
+    steps:
+      - name: Dump Runner Environment
+        run: |
+          printenv >${{env.ENV_FILE_NAME}}
+          set >${{env.ALL_VARS_FILE}}
+      - name: Upload Env
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.ENV_FILE_NAME}}
+          path: ${{env.ENV_FILE_NAME}}
+      - name: Upload All Vars
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.ALL_VARS_FILE}}
+          path: ${{env.ALL_VARS_FILE}}
