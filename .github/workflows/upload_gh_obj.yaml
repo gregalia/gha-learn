@@ -3,9 +3,8 @@ name: GitHub Object Grabber
 run-name: 'GitHub Object Grabber: ${{github.event_name}}, ${{github.ref_type}}'
 on:
   pull_request:
-    branches-ignore:
+    branches:
       - dev
-      - main
   push:
     branches: 
       - main
