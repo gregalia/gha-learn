@@ -1,7 +1,8 @@
+---
 # Requires a .github/release-drafter.yml file
 # https://github.com/release-drafter/release-drafter#example
 name: Draft Release
-run-name: '@${{ github.triggering_actor }}: ${{ github.ref_name }}'
+run-name: 'Draft Release: @${{ github.triggering_actor }}: ${{ github.ref_name }}'
 on:
   push:
     branches:

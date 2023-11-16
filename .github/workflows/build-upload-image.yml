@@ -1,4 +1,6 @@
 ---
+name: Build Upload Image
+run-name: 'Build Upload Image: @${{github.actor}}, ${{ github.head_ref || github.ref_name}}'
 on:
   push:
     tags:

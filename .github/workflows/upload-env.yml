@@ -1,5 +1,6 @@
+---
 name: GHA Runner Env Grabber
-run-name: 'GitHub Object Grabber: ${{ github.event_name }}'
+run-name: 'GHA Runner Env Grabber: ${{ github.event_name }}'
 on:
   - pull_request
   - push
