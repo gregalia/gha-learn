@@ -2,36 +2,54 @@
 name: Build Upload Image
 run-name: 'Build Upload Image: @${{github.actor}}, ${{ github.head_ref || github.ref_name}}'
 on:
-  push:
-    tags:
-      - v*
-  pull_request:
+  workflow_dispatch:
+    inputs:
+      tag:
+        type: string
+        required: false
 jobs:
   build-save:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     env:
-      IMAGE_NAME: ${{github.event.repository.name}}:latest
       ARTIFACT_NAME: ${{github.event.repository.name}}-latest.docker
       DOCKERFILE_PATH: build_setup/Dockerfile
     steps:
       - name: Checkout Source
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Set Tag
+        run: |
+          shopt -s nocasematch
+          if [[ -n ${{inputs.tag}} ]]; then
+            TAG=${{inputs.tag}}
+          elif [[ ${{github.ref_type}} == 'tag'  ]]; then
+            TAG=${{github.ref_name}}
+          else
+            TAG=${{github.event.pull_request.head.sha || github.sha}}
+          fi
+          cat <<HEREDOC >>${{github.env}}
+          TAG=${TAG}
+          HEREDOC
       - name: Create Container Driver Builder
         run: |
           docker buildx create \
             --name container \
             --driver=docker-container
+      # exports $ACTIONS_CACHE_URL & $ACTIONS_RUNTIME_TOKEN for GHA caching
+      - name: Expose GitHub Runtime
+        uses: crazy-max/ghaction-github-runtime@v3
       - name: Build Runtime Image
         run: |
           docker build \
             --builder=container \
             --target test \
-            --tag ${{env.IMAGE_NAME}} \
+            --tag ${{github.event.repository.name}}:${{env.TAG}} \
             --file "${{env.DOCKERFILE_PATH}}" \
             --output type=docker,dest=${{env.ARTIFACT_NAME}} \
-            .
+            --cache-to type=gha,ignore-error=true \
+            --cache-from type=gha,ignore-error=true \
+            "${PWD}"
       - name: Generate Artifact Checksum
         run: |
           sha256sum ${{env.ARTIFACT_NAME}} >checksum
