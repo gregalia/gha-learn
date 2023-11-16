@@ -27,7 +27,7 @@ jobs:
             --tag ${{env.IMAGE_NAME}} \
             --file "${{env.DOCKERFILE_PATH}}" \
             --output type=docker,dest=${{env.ARTIFACT_NAME}} \
-            .
+            ${{github.repositoryUrl}}
       - name: Generate Artifact Checksum
         run: |
           sha256sum ${{env.ARTIFACT_NAME}} >checksum
