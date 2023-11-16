@@ -11,7 +11,7 @@ jobs:
       contents: write
     env:
       IMAGE_NAME: ${{github.event.repository.name}}:latest
-      ARTIFACT_NAME: ${{github.event.repository.name}}:latest.docker
+      ARTIFACT_NAME: ${{github.event.repository.name}}-latest.docker
       DOCKERFILE_PATH: build_setup/Dockerfile
     steps:
       - name: Checkout Source
