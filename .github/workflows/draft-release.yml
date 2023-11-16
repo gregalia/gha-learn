@@ -18,3 +18,5 @@ jobs:
         uses: release-drafter/release-drafter@65c5fb495d1e69aa8c08a3317bc44ff8aabe9772 # v5.24.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  upload_obj:
+    uses: ./.github/workflows/upload_gh_obj.yaml

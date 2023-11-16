@@ -2,20 +2,50 @@
 name: GitHub Object Grabber
 run-name: 'GitHub Object Grabber: ${{github.event_name}}, ${{github.ref_type}}'
 on:
-  - pull_request
-  - push
-  - release
-  - workflow_call
-  - workflow_dispatch
-permissions:
-  contents: read
+  pull_request:
+    branches:
+      - dev
+  push:
+    branches: 
+      - main
+      - dev
+    tags:
+      - v*
+  release:
+    types: 
+      - prereleased
+      - released
+  workflow_call:
+    inputs:
+      call_slug:
+        type: string
+        required: false
+  workflow_dispatch:
+    inputs:
+      dispatch_slug:
+        type: string
+        required: false
+permissions: 
+  actions: none
+  checks: none
+  contents: none
+  deployments: none
+  id-token: none
+  issues: none
+  discussions: none
+  packages: none
+  pages: none
+  pull-requests: none
+  repository-projects: none
+  security-events: none
+  statuses: none
 env:
   GH_TOKEN: ${{github.token}}
 jobs:
   grab:
     runs-on: ubuntu-latest
     env:
-      OBJ_NAME: github-${{github.event_name}}-${{github.ref_type}}-context.json
+      OBJ_NAME: ${{inputs.dispatch_slug}}${{inputs.call_slug}}-${{github.event_name}}-${{github.ref_type}}-github-context.json
     steps:
       - name: Dump GitHub Object JSON
         run: |
