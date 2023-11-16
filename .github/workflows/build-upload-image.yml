@@ -14,6 +14,8 @@ jobs:
       ARTIFACT_NAME: ${{github.event.repository.name}}:latest.docker
       DOCKERFILE_PATH: build_setup/Dockerfile
     steps:
+      - name: Checkout Source
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Create Container Driver Builder
         run: |
           docker buildx create \
@@ -27,7 +29,7 @@ jobs:
             --tag ${{env.IMAGE_NAME}} \
             --file "${{env.DOCKERFILE_PATH}}" \
             --output type=docker,dest=${{env.ARTIFACT_NAME}} \
-            ${{github.repositoryUrl}}
+            .
       - name: Generate Artifact Checksum
         run: |
           sha256sum ${{env.ARTIFACT_NAME}} >checksum
