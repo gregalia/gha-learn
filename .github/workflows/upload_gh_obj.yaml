@@ -14,7 +14,7 @@ jobs:
   grab:
     runs-on: ubuntu-latest
     env:
-      OBJ_NAME: github-${{github.event_name}}-${{github.ref_name}}-context.json
+      OBJ_NAME: github-${{github.event_name}}-${{github.ref_type}}-context.json
     steps:
       - name: Dump GitHub Object JSON
         run: |
