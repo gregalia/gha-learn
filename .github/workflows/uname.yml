@@ -1,0 +1,12 @@
+on:
+  - workflow_call
+  - workflow_dispatch
+  - pull_request
+jobs:
+  uname:
+    runs-on: ubuntu-latest
+    steps:
+      - name: uname
+        run: |
+          uname -s
+          uname -m
