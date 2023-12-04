@@ -2,7 +2,7 @@ name: Run on Comment
 run-name: Run on Comment
 on:
   issue_comment:
-    types: 
+    types:
       - created
       - edited
 permissions:
@@ -35,13 +35,13 @@ jobs:
             --raw-field "description=details:" \
             --raw-field "target_url=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
-# github.action: __run_2
-# github.actor_id: 13774377
-# github.job: deploy
-# github.repository_id: 654075819
-# github.run_id: 6004674212
-# target URL: https://github.com/gregalia/gha-learn/actions/runs/5361436299/job/14516701921?pr=16
-# https://github.com/gregalia/gha-learn/actions/runs/github.run_id
+      # github.action: __run_2
+      # github.actor_id: 13774377
+      # github.job: deploy
+      # github.repository_id: 654075819
+      # github.run_id: 6004674212
+      # target URL: https://github.com/gregalia/gha-learn/actions/runs/5361436299/job/14516701921?pr=16
+      # https://github.com/gregalia/gha-learn/actions/runs/github.run_id
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -61,4 +61,3 @@ jobs:
             --raw-field "context=Upload Workflows" \
             --raw-field "target_url=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             --raw-field "description=details:"
-

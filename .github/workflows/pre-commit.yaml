@@ -3,7 +3,7 @@ on:
   schedule:
     # * is a special character in YAML so you have to quote this string
     # At 47 minutes past the hour, every 8 hours, starting at 01:00 AM
-    - cron:  '47 1/8 * * *'
+    - cron: '47 1/8 * * *'
   workflow_dispatch:
 jobs:
   pre-commit:

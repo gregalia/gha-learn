@@ -6,13 +6,13 @@ on:
     branches:
       - dev
   push:
-    branches: 
+    branches:
       - main
       - dev
     tags:
       - v*
   release:
-    types: 
+    types:
       - prereleased
       - released
   workflow_call:
@@ -25,7 +25,7 @@ on:
       dispatch_slug:
         type: string
         required: false
-permissions: 
+permissions:
   actions: none
   checks: none
   contents: none
@@ -45,7 +45,9 @@ jobs:
   grab:
     runs-on: ubuntu-latest
     env:
-      OBJ_NAME: ${{format('{0}{1}-', inputs.dispatch_slug, inputs.call_slug)}}${{github.event_name}}-${{github.ref_type}}-github-context.json
+      OBJ_NAME:
+        ${{format('{0}{1}-', inputs.dispatch_slug,
+        inputs.call_slug)}}${{github.event_name}}-${{github.ref_type}}-github-context.json
     steps:
       - name: Dump GitHub Object JSON
         run: |

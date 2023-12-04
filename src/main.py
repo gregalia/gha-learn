@@ -1,5 +1,5 @@
-from secrets import token_hex
 from json import dumps
+from secrets import token_hex
 
 random_bytes_file = "random_bytes.json"
 num_bytes = 1024

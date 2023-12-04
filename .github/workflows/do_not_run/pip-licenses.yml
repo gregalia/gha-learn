@@ -35,7 +35,7 @@ jobs:
           git diff --exit-code --name-status "${GITHUB_HEAD_REF}..${GITHUB_BASE_REF}" -- "${WATCH_FILE}" &&
             result=false ||
             result=true
-          echo "$var_name=${result}" | 
+          echo "$var_name=${result}" |
             tee -a "${GITHUB_ENV}" |
             xargs printf "#### %s\n" |
             tee -a "${GITHUB_STEP_SUMMARY}"
