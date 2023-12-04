@@ -1,0 +1,48 @@
+# Sync all python version params with Dockerfile
+
+[tool.black]
+include         = '(src|tests)/.*\.py'
+line-length     = 120
+target-versions = ["py311"]
+# check = true # temprarily disable formatting
+# verbose = true # confirm that black is using this config
+
+[tool.flake8]
+max-complexity  = 20
+max-line-length = 120
+
+[tool.ruff]
+fix            = false
+line-length    = 120
+src            = ["src", "tests"]
+target-version = "py311"
+
+[tool.isort]
+known_firetail_toolbox = ["firetail_toolbox"]
+line_length            = 120
+profile                = "black"
+py_version             = 311
+sections               = ["FIRETAIL_TOOLBOX", "FIRSTPARTY", "FUTURE", "LOCALFOLDER", "STDLIB", "THIRDPARTY"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+  "ignore:Accessing Draft4Validator.resolver is deprecated as of v4.18.0:DeprecationWarning",
+  "ignore:jsonschema.RefResolver is deprecated as of v4.18.0:DeprecationWarning",
+  "ignore:typing.io is deprecated, import directly from typing instead. typing.io will be removed in Python 3.12.:DeprecationWarning",
+]
+testpaths = ["tests"]
+# https://docs.pytest.org/en/stable/reference/reference.html#command-line-flags
+addopts = [
+  "--ignore-glob=*helper*",
+  "--strict-config",        # Raise an error if any issues parsing this config
+  "-ra",                    # Show all extra test summary info,
+]
+required_plugins = ["pytest-cov>=4.0.0"]
+
+# https://coverage.readthedocs.io/en/stable/config.html
+[tool.coverage.run]
+omit = ["tests/*"]
+
+# https://bandit.readthedocs.io/en/latest/config.html
+[tool.bandit]
+exclude_dirs = [".venv", "tests"]
