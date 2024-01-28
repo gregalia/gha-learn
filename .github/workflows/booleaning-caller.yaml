@@ -8,7 +8,7 @@ on:
         default: foo
       NUMBER_INPUT:
         required: true
-        type: boolean
+        type: number
         default: 10
       BOOLEAN_INPUT:
         required: true
