@@ -60,3 +60,34 @@ jobs:
         if: toJSON(inputs.STRING_INPUT)
         run: |-
           echo "STRING_INPUT is true by coercing via toJSON"
+      - name: Decide Boolean AND String
+        if: inputs.BOOLEAN_INPUT && inputs.STRING_INPUT
+        run: |-
+          echo "inputs.BOOLEAN_INPUT && inputs.STRING_INPUT"
+      - name: Decide Boolean OR String
+        if: inputs.BOOLEAN_INPUT || inputs.STRING_INPUT
+        run: |-
+          echo "inputs.BOOLEAN_INPUT || inputs.STRING_INPUT"
+      - name: Decide Boolean NOR String
+        if: inputs.BOOLEAN_INPUT || !inputs.STRING_INPUT
+        run: |-
+          echo "inputs.BOOLEAN_INPUT || !inputs.STRING_INPUT"
+      - name: Decide Boolean NAND String
+        if: inputs.BOOLEAN_INPUT && !inputs.STRING_INPUT
+        run: |-
+          echo "inputs.BOOLEAN_INPUT && !inputs.STRING_INPUT"
+      - name: Decide NOT Boolean NAND String
+        if: ${{!inputs.BOOLEAN_INPUT && !inputs.STRING_INPUT}}
+        run: |-
+          echo "!inputs.BOOLEAN_INPUT && !inputs.STRING_INPUT"
+      - name: Show Warning
+        run: |-
+          warning_title='WARNING'
+          warning_msg='Do better next time'
+          echo "::warning title=${warning_title} input::${warning_msg}"
+      - name: Show Error
+        run: |-
+          error_title='ERROR'
+          error_msg='No more chances'
+          echo "::error title=${error_title} input::${error_msg}"
+          exit 1
