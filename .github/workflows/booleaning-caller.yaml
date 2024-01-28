@@ -22,3 +22,7 @@ jobs:
       # NUMBER_INPUT: ${{toJSON(inputs.NUMBER_INPUT)}}
       # NUMBER_INPUT_AUTO: 10
       BOOLEAN_INPUT: ${{inputs.BOOLEAN_INPUT}}
+      MULTILINE_INPUT: |
+        FOO=bar
+        BAZ=qux
+      MULTISPACE_INPUT: --foo bar --baz qux

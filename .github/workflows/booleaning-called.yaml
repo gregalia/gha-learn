@@ -13,9 +13,18 @@ on:
       BOOLEAN_INPUT:
         required: true
         type: boolean
+      MULTILINE_INPUT:
+        type: string
+      MULTISPACE_INPUT:
+        type: string
 jobs:
   try:
     runs-on: ubuntu-latest
+    env:
+      STRING_INPUT: ${{inputs.STRING_INPUT}}
+      BOOLEAN_INPUT: ${{inputs.BOOLEAN_INPUT}}
+      MULTILINE_INPUT: ${{inputs.MULTILINE_INPUT}}
+      MULTISPACE_INPUT: ${{inputs.MULTISPACE_INPUT}}
     steps:
       - name: Env
         run: |-
@@ -29,21 +38,11 @@ jobs:
           $(jq --color-output <<<'${{toJSON(github.event.inputs)}}')
           ::endgroup::"
       - name: Echo
-        env:
-          STEP_STRING_INPUT: ${{inputs.STRING_INPUT}}
-          # STEP_NUMBER_INPUT: ${{inputs.NUMBER_INPUT}}
-          # STEP_NUMBER_INPUT_AUTO: ${{inputs.NUMBER_INPUT_AUTO}}
-          STEP_BOOLEAN_INPUT: ${{inputs.BOOLEAN_INPUT}}
         run: |-
-          echo "INPUT_STRING_INPUT: '${INPUT_STRING_INPUT}'"
-          # echo "INPUT_NUMBER_INPUT: '${INPUT_NUMBER_INPUT}'"
-          # echo "INPUT_NUMBER_INPUT_AUTO: '${INPUT_NUMBER_INPUT_AUTO}'"
-          echo "INPUT_BOOLEAN_INPUT: '${INPUT_BOOLEAN_INPUT}'"
-
-          echo "STEP_STRING_INPUT: '${STEP_STRING_INPUT}'"
-          # echo "STEP_NUMBER_INPUT: '${STEP_NUMBER_INPUT}'"
-          # echo "STEP_NUMBER_INPUT_AUTO: '${STEP_NUMBER_INPUT_AUTO}'"
-          echo "STEP_BOOLEAN_INPUT: '${STEP_BOOLEAN_INPUT}'"
+          echo "STRING_INPUT: '${STRING_INPUT}'"
+          echo "BOOLEAN_INPUT: '${BOOLEAN_INPUT}'"
+          echo "MULTILINE_INPUT: '${MULTILINE_INPUT}'"
+          echo "MULTISPACE_INPUT: '${MULTISPACE_INPUT}'"
       - name: Decide Boolean
         if: inputs.BOOLEAN_INPUT
         run: |-
@@ -90,4 +89,18 @@ jobs:
           error_title='ERROR'
           error_msg='No more chances'
           echo "::error title=${error_title} input::${error_msg}"
-
+          # exit 1
+      - name: Handle Multiline Input
+        run: |-
+          IFS=$'\n' read -rd '' -a multiline_input \
+            <<<"${MULTILINE_INPUT}" || true
+          for input in "${multiline_input[@]}"; do
+            echo "input: '${input}'"
+          done
+      - name: Handle Multispace Input
+        run: |-
+          IFS=' ' read -rd '' -a multispace_input \
+            <<<"${MULTISPACE_INPUT}" || true
+          for input in "${multispace_input[@]}"; do
+            echo "input: '${input}'"
+          done
