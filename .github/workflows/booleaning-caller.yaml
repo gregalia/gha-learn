@@ -4,8 +4,8 @@ on:
     inputs:
       STRING_INPUT:
         required: true
+        default: ''
         type: string
-        default: foo
       # NUMBER_INPUT:
       #   required: true
       #   type: string
