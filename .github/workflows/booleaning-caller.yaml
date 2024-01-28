@@ -8,8 +8,8 @@ on:
         default: foo
       NUMBER_INPUT:
         required: true
-        type: number
-        default: 10
+        type: string
+        default: '10'
       BOOLEAN_INPUT:
         required: true
         type: boolean
@@ -19,5 +19,5 @@ jobs:
     uses: ./.github/workflows/booleaning-called.yaml
     with:
       STRING_INPUT: ${{inputs.STRING_INPUT}}
-      NUMBER_INPUT: ${{inputs.NUMBER_INPUT}}
+      NUMBER_INPUT: ${{toJson(inputs.NUMBER_INPUT)}}
       BOOLEAN_INPUT: ${{inputs.BOOLEAN_INPUT}}
