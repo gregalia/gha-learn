@@ -5,6 +5,7 @@ on:
       STRING_INPUT:
         required: false
         type: string
+        default: ''
       # NUMBER_INPUT:
       #   required: true
       #   type: string
