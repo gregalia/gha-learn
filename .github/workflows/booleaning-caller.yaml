@@ -20,4 +20,5 @@ jobs:
     with:
       STRING_INPUT: ${{inputs.STRING_INPUT}}
       NUMBER_INPUT: ${{toJson(inputs.NUMBER_INPUT)}}
+      # NUMBER_INPUT_AUTO: 10
       BOOLEAN_INPUT: ${{inputs.BOOLEAN_INPUT}}

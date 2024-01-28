@@ -7,9 +7,9 @@ on:
       NUMBER_INPUT:
         required: true
         type: number
-      NUMBER_INPUT_AUTO:
-        required: true
-        type: number
+      # NUMBER_INPUT_AUTO:
+      #   required: true
+      #   type: number
       BOOLEAN_INPUT:
         required: true
         type: boolean
