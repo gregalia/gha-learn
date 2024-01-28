@@ -19,14 +19,14 @@ jobs:
     steps:
       - name: Env
         run: |-
-          env
+          env | sort
       - name: Inputs
         run: |-
           echo "::group::inputs
-          ${{toJson(inputs)}}
+          $(jq --color-output <<<"${{toJSON(inputs)}}")
           ::endgroup::"
           echo "::group::github.event.inputs
-          ${{toJson(github.event.inputs)}}
+          $(jq --color-output <<<"${{toJSON(github.event.inputs)}}")
           ::endgroup::"
       - name: Echo
         env:
@@ -44,3 +44,19 @@ jobs:
           # echo "STEP_NUMBER_INPUT: '${STEP_NUMBER_INPUT}'"
           # echo "STEP_NUMBER_INPUT_AUTO: '${STEP_NUMBER_INPUT_AUTO}'"
           echo "STEP_BOOLEAN_INPUT: '${STEP_BOOLEAN_INPUT}'"
+      - name: Decide Boolean
+        if: inputs.BOOLEAN_INPUT
+        run: |-
+          echo "BOOLEAN_INPUT is true"
+      - name: Decide String Implicit
+        if: inputs.STRING_INPUT
+        run: |-
+          echo "STRING_INPUT is true by itself"
+      - name: Decide String Explicit
+        if: inputs.STRING_INPUT != ''
+        run: |-
+          echo "STRING_INPUT is true by comparing to an empty string"
+      - name: Decide String To JSON
+        if: toJSON(inputs.STRING_INPUT)
+        run: |-
+          echo "STRING_INPUT is true by coercing via toJSON"
