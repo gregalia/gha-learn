@@ -3,8 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       STRING_INPUT:
-        required: true
-        default: ''
+        required: false
         type: string
       # NUMBER_INPUT:
       #   required: true
