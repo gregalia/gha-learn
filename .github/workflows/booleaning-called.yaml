@@ -2,10 +2,13 @@ on:
   workflow_call:
     inputs:
       STRING_INPUT:
+        required: true
         type: string
       NUMBER_INPUT:
+        required: true
         type: number
       BOOLEAN_INPUT:
+        required: true
         type: boolean
 jobs:
   try:
@@ -13,9 +16,9 @@ jobs:
     steps:
       - name: Echo
         env:
-          STEP_STRING_INPUT: ${{inputs.STEP_STRING_INPUT}}
-          STEP_NUMBER_INPUT: ${{inputs.STEP_NUMBER_INPUT}}
-          STEP_BOOLEAN_INPUT: ${{inputs.STEP_BOOLEAN_INPUT}}
+          STEP_STRING_INPUT: ${{inputs.STRING_INPUT}}
+          STEP_NUMBER_INPUT: ${{inputs.NUMBER_INPUT}}
+          STEP_BOOLEAN_INPUT: ${{inputs.BOOLEAN_INPUT}}
         run: |
           echo "INPUT_STRING_INPUT: '${INPUT_STRING_INPUT}'"
           echo "INPUT_NUMBER_INPUT: '${INPUT_NUMBER_INPUT}'"
