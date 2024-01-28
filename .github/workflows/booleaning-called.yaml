@@ -1,0 +1,38 @@
+on:
+  workflow_call:
+    inputs:
+      STRING_INPUT:
+        type: string
+      NUMBER_INPUT:
+        type: number
+      BOOLEAN_INPUT:
+        type: boolean
+jobs:
+  try:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        env:
+          STEP_STRING_INPUT: ${{inputs.STEP_STRING_INPUT}}
+          STEP_NUMBER_INPUT: ${{inputs.STEP_NUMBER_INPUT}}
+          STEP_BOOLEAN_INPUT: ${{inputs.STEP_BOOLEAN_INPUT}}
+        run: |
+          echo "INPUT_STRING_INPUT: '${INPUT_STRING_INPUT}'"
+          echo "INPUT_NUMBER_INPUT: '${INPUT_NUMBER_INPUT}'"
+          echo "INPUT_BOOLEAN_INPUT: '${INPUT_BOOLEAN_INPUT}'"
+
+          echo "STEP_STRING_INPUT: '${STEP_STRING_INPUT}'"
+          echo "STEP_NUMBER_INPUT: '${STEP_NUMBER_INPUT}'"
+          echo "STEP_BOOLEAN_INPUT: '${STEP_BOOLEAN_INPUT}'"
+
+          echo "::group::env
+          $(env)
+          ::endgroup::"
+
+          echo "::group::inputs
+          ${{toJson(inputs)}}
+          ::endgroup::"
+
+          echo "::group::github.event.inputs
+          ${{toJson(github.event.inputs)}}
+          ::endgroup::"
