@@ -23,10 +23,10 @@ jobs:
       - name: Inputs
         run: |-
           echo "::group::inputs
-          $(jq --color-output <<<"${{toJSON(inputs)}}")
+          $(jq --color-output <<<'${{toJSON(inputs)}}')
           ::endgroup::"
           echo "::group::github.event.inputs
-          $(jq --color-output <<<"${{toJSON(github.event.inputs)}}")
+          $(jq --color-output <<<'${{toJSON(github.event.inputs)}}')
           ::endgroup::"
       - name: Echo
         env:
