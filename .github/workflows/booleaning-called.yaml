@@ -90,4 +90,4 @@ jobs:
           error_title='ERROR'
           error_msg='No more chances'
           echo "::error title=${error_title} input::${error_msg}"
-          exit 1
+
