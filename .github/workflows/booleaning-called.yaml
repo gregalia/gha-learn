@@ -102,4 +102,7 @@ jobs:
         env:
           INPUTS: ${{toJSON(inputs)}}
         run: |-
-          yq --prettyPrint <<<"${INPUTS}"
+          cat <<HEREDOC >>"${GITHUB_STEP_SUMMARY}"
+          ### Inputs
+          $(yq --prettyPrint <<<"${INPUTS}")
+          HEREDOC
