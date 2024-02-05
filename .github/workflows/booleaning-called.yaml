@@ -108,3 +108,23 @@ jobs:
           $(yq --prettyPrint <<<"${INPUTS}")
           \`\`\`
           HEREDOC
+      - name: Output Something
+        id: output-something
+        run: |-
+          cat <<HEREDOC >>"${GITHUB_OUTPUT}"
+          FOO_BAR=baz
+          HEREDOC
+  output:
+    needs: try
+    runs-on: ubuntu-latest
+    steps:
+      - name: Summarize Output
+        env:
+          OUTPUT: ${{toJSON(needs.try.outputs)}}
+        run: |-
+          cat <<HEREDOC >>"${GITHUB_STEP_SUMMARY}"
+          ### Output
+          \`\`\`yaml
+          $(yq --prettyPrint <<<"${OUTPUT}")
+          \`\`\`
+          HEREDOC
