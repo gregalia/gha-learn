@@ -114,6 +114,8 @@ jobs:
           cat <<HEREDOC >>"${GITHUB_OUTPUT}"
           FOO_BAR=baz
           HEREDOC
+    outputs:
+      FOO_BAR: ${{steps.output-something.outputs.FOO_BAR}}
   output:
     needs: try
     runs-on: ubuntu-latest
