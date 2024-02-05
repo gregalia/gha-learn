@@ -49,7 +49,17 @@ jobs:
         ${{format('{0}{1}-', inputs.dispatch_slug,
         inputs.call_slug)}}${{github.event_name}}-${{github.ref_type}}-github-context.json
     steps:
+      - name: Dump GitHub/Input Objects JSON
+        if: ${{inputs}}
+        run: |
+          cat <<HEREDOC >${{env.OBJ_NAME}}
+          {
+            "github:${{toJson(github)}},
+            "inputs: ${{toJson(inputs)}}
+          }
+          HEREDOC
       - name: Dump GitHub Object JSON
+        if: ${{!inputs}}
         run: |
           cat <<HEREDOC >${{env.OBJ_NAME}}
           ${{toJson(github)}}

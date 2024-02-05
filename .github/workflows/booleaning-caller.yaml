@@ -26,3 +26,5 @@ jobs:
         FOO=bar
         BAZ=qux
       MULTISPACE_INPUT: --foo bar --baz qux
+  grab_objects:
+    uses: ./.github/workflows/upload_gh_obj.yaml
