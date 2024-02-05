@@ -6,10 +6,6 @@ on:
         required: false
         type: string
         default: ''
-      # NUMBER_INPUT:
-      #   required: true
-      #   type: string
-      #   default: '10'
       BOOLEAN_INPUT:
         required: true
         type: boolean
@@ -19,8 +15,6 @@ jobs:
     uses: ./.github/workflows/booleaning-called.yaml
     with:
       STRING_INPUT: ${{inputs.STRING_INPUT}}
-      # NUMBER_INPUT: ${{toJSON(inputs.NUMBER_INPUT)}}
-      # NUMBER_INPUT_AUTO: 10
       BOOLEAN_INPUT: ${{inputs.BOOLEAN_INPUT}}
       MULTILINE_INPUT: |
         FOO=bar
