@@ -6,7 +6,7 @@ on:
   - push
   - release
 jobs:
-  uname:
+  log_stuff:
     runs-on: ubuntu-latest
     steps:
       - name: Log Environment Variables
@@ -31,11 +31,8 @@ jobs:
           jq . <<<'${{env}}'
           jq . <<<'${{vars}}'
           jq . <<<'${{job}}'
-          jq . <<<'${{jobs}}'
           jq . <<<'${{steps}}'
           jq . <<<'${{runner}}'
           jq . <<<'${{secrets}}'
-          jq . <<<'${{strategy}}'
-          jq . <<<'${{matrix}}'
           jq . <<<'${{needs}}'
           jq . <<<'${{inputs}}'
