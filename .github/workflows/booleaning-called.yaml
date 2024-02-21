@@ -1,4 +1,5 @@
 name: Booleaning Called
+run-name: Booleaning Called
 on:
   workflow_call:
     inputs:

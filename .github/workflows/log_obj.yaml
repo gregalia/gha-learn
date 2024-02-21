@@ -1,4 +1,5 @@
 name: Log GitHub Stuff
+run-name: Log GitHub Stuff
 on:
   - workflow_call
   - workflow_dispatch

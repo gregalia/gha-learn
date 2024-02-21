@@ -1,4 +1,5 @@
 name: Booleaning Caller
+run-name: Booleaning Caller
 on:
   workflow_dispatch:
     inputs:

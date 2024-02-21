@@ -1,4 +1,5 @@
-name: uname
+name: Get System
+run-name: Get System
 on:
   - workflow_call
   - workflow_dispatch
