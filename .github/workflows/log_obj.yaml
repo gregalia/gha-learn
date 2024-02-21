@@ -19,17 +19,8 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          jq --color-output '.' <<<'${{ toJson(github) }}'
-      - name: Log Other Objects
-        if: always()
-        continue-on-error: true
-        run: |-
-          set +o errexit
-          jq --color-output '.' <<<'${{toJSON(env)}}'
-          jq --color-output '.' <<<'${{toJSON(vars)}}'
-          jq --color-output '.' <<<'${{toJSON(job)}}'
-          jq --color-output '.' <<<'${{toJSON(steps)}}'
-          jq --color-output '.' <<<'${{toJSON(runner)}}'
-          jq --color-output '.' <<<'${{toJSON(secrets)}}'
-          jq --color-output '.' <<<'${{toJSON(needs)}}'
-          jq --color-output '.' <<<'${{toJSON(inputs)}}'
+          yq . \
+            --prettyPrint \
+            --input-format json \
+            --colors \
+            <<<'${{ toJson(github) }}'
