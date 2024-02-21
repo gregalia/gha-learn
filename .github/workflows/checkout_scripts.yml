@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: workflow_scripts
+          sparse-checkout-cone-mode: true
           sparse-checkout: |
             .github/workflows/scripts
       - name: List files in shared scripts
@@ -23,4 +24,4 @@ jobs:
           ls -R
       - name: Run Script
         run: |-
-          bash workflow_scripts/.github/workflows/scripts/test.sh
+          ./workflow_scripts/.github/workflows/scripts/test.sh
