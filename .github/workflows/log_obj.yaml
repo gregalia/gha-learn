@@ -18,9 +18,7 @@ jobs:
       - name: Log GitHub Object
         if: always()
         continue-on-error: true
+        env:
+          GITHUB_CONTEXT: ${{toJson(github)}}
         run: |
-          yq . \
-            --prettyPrint \
-            --input-format json \
-            --colors \
-            <<<'${{ toJson(github) }}'
+          yq . --prettyPrint --input-format json --colors <<<"${GITHUB_CONTEXT}"
