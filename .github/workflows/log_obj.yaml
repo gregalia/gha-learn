@@ -1,0 +1,41 @@
+name: Log GitHub Stuff
+on:
+  - workflow_call
+  - workflow_dispatch
+  - pull_request
+  - push
+  - release
+jobs:
+  uname:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log Environment Variables
+        if: always()
+        continue-on-error: true
+        run: |
+          env | sort
+      - name: Log GitHub Object
+        if: always()
+        continue-on-error: true
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          jq . <<<"{GITHUB_CONTEXT}"
+      - name: Log Other Objects
+        if: always()
+        continue-on-error: true
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |-
+          set +o errexit
+          jq . <<<'${{env}}'
+          jq . <<<'${{vars}}'
+          jq . <<<'${{job}}'
+          jq . <<<'${{jobs}}'
+          jq . <<<'${{steps}}'
+          jq . <<<'${{runner}}'
+          jq . <<<'${{secrets}}'
+          jq . <<<'${{strategy}}'
+          jq . <<<'${{matrix}}'
+          jq . <<<'${{needs}}'
+          jq . <<<'${{inputs}}'
