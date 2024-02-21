@@ -17,10 +17,8 @@ jobs:
       - name: Log GitHub Object
         if: always()
         continue-on-error: true
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
-          jq . <<<"{GITHUB_CONTEXT}"
+          jq '.' <<<'${{ toJson(github) }}'
       - name: Log Other Objects
         if: always()
         continue-on-error: true
@@ -28,11 +26,11 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |-
           set +o errexit
-          jq . <<<'${{env}}'
-          jq . <<<'${{vars}}'
-          jq . <<<'${{job}}'
-          jq . <<<'${{steps}}'
-          jq . <<<'${{runner}}'
-          jq . <<<'${{secrets}}'
-          jq . <<<'${{needs}}'
-          jq . <<<'${{inputs}}'
+          jq '.' <<<'${{toJSON(env)}}'
+          jq '.' <<<'${{toJSON(vars)}}'
+          jq '.' <<<'${{toJSON(job)}}'
+          jq '.' <<<'${{toJSON(steps)}}'
+          jq '.' <<<'${{toJSON(runner)}}'
+          jq '.' <<<'${{toJSON(secrets)}}'
+          jq '.' <<<'${{toJSON(needs)}}'
+          jq '.' <<<'${{toJSON(inputs)}}'

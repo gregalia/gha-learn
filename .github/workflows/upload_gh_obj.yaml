@@ -45,9 +45,7 @@ jobs:
   grab:
     runs-on: ubuntu-latest
     env:
-      OBJ_NAME:
-        ${{format('{0}{1}-', inputs.dispatch_slug,
-        inputs.call_slug)}}${{github.event_name}}-${{github.ref_type}}-github-context.json
+      OBJ_NAME: "${{format('{0}{1}{2}',inputs.dispatch_slug,inputs.call_slug)}}${{github.event_name}}-${{github.ref_type}}-github-context.json"
     steps:
       - name: Dump GitHub/Input Objects JSON
         if: ${{inputs}}
