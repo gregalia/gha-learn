@@ -1,4 +1,10 @@
-on: pull_request
+name: Standalone Scripts
+on:
+  - workflow_call
+  - workflow_dispatch
+  - pull_request
+  - push
+  - release
 permissions:
   contents: read
 jobs:
