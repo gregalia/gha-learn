@@ -6,15 +6,23 @@ on:
     branches:
       - dev
 jobs:
+  getter:
+    outputs:
+      OUTPUT: ${{ steps.getter.outputs.OUTPUT}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: getter
+        id: getter
+        run: |-
+          cat <<HEREDOC >>"${GITHUB_OUTPUT}"
+          OUTPUT=[{"key":"key_a","value":"1"},{"key":"key_b","value":"2"},{"key":"key_c","value":"3"}]
+          HEREDOC
   matrix:
+    needs: getter
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        top:
-          - key: key-1
-            value: value-1
-          - key: key-2
-            value: value-2
+        top: ${{fromJson(needs.getter.outputs.OUTPUT)}}
     steps:
       - name: Print
         env:
